@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PostStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+enum SourceType {
+  MANUAL
+  NEWSAPI
+}
+
+enum BannerPosition {
+  HOME_TOP
+  HOME_MIDDLE
+  SIDEBAR
+  ARTICLE_BOTTOM
+  CATEGORY_TOP
+}
+
+enum EmbedType {
+  RADIO
+  YOUTUBE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?
+  posts       Post[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  slug      String    @unique
+  posts     PostTag[]
+  createdAt DateTime  @default(now())
+}
+
+model Post {
+  id               String      @id @default(cuid())
+  title            String
+  slug             String      @unique
+  excerpt          String?
+  content          String?
+  featuredImageUrl String?
+  categoryId       Int?
+  category         Category?   @relation(fields: [categoryId], references: [id])
+  status           PostStatus  @default(DRAFT)
+  isMain           Boolean     @default(false)
+  isFeatured       Boolean     @default(false)
+  sourceType       SourceType  @default(MANUAL)
+  sourceName       String?
+  externalUrl      String?     @unique
+  author           String?
+  publishedAt      DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  deletedAt        DateTime?
+  tags             PostTag[]
+
+  @@index([status, publishedAt])
+  @@index([categoryId, status])
+}
+
+model PostTag {
+  postId String
+  tagId  Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  title     String?
+  url       String
+  alt       String?
+  createdAt DateTime @default(now())
+}
+
+model Banner {
+  id        String         @id @default(cuid())
+  title     String
+  imageUrl  String
+  link      String?
+  position  BannerPosition
+  isActive  Boolean        @default(true)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model ExternalSource {
+  id        String   @id @default(cuid())
+  sourceKey String?  @unique
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  id              Int      @id @default(1)
+  siteName        String   @default("Diario Angostura Hoy")
+  tagline         String   @default("Diario Digital")
+  location        String   @default("Villa La Angostura, Neuquen, Argentina")
+  contactEmail    String?
+  contactAddress  String?
+  footerText      String?
+  whatsappNumber  String?
+  facebookUrl     String?
+  instagramUrl    String?
+  youtubeUrl      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model LiveEmbed {
+  id        String    @id @default(cuid())
+  type      EmbedType @unique
+  title     String
+  url       String?
+  iframe    String?
+  isActive  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
