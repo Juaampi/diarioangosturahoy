@@ -21,6 +21,11 @@ async function main() {
       description: "Noticias y actualidad de Villa La Angostura y la region.",
     },
     {
+      name: "Regionales",
+      slug: "regionales",
+      description: "Cobertura regional de Neuquen, Rio Negro y la zona de los lagos.",
+    },
+    {
       name: "Nacionales",
       slug: "nacionales",
       description: "Cobertura de noticias nacionales relevantes para la audiencia local.",
@@ -117,6 +122,33 @@ async function main() {
         "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=80",
       tags: ["feria", "emprendedores", "produccion-local"],
       publishedAt: "2026-04-24T11:15:00.000Z",
+    },
+    {
+      title: "San Martin y Villa La Angostura coordinan una agenda regional para fortalecer la temporada media",
+      excerpt:
+        "Municipios, prestadores y organismos turisticos avanzan en una agenda conjunta para atraer visitantes fuera de los picos tradicionales.",
+      content:
+        "Representantes de distintas localidades de la zona de los lagos avanzan en una agenda compartida de promocion, conectividad y eventos para dinamizar la temporada media.\n\nLa estrategia busca potenciar el perfil regional con acciones coordinadas entre municipios, camaras empresariales y operadores del sector.\n\nUno de los ejes principales es diversificar la oferta y posicionar escapadas de corta estadia con identidad patagonica.",
+      categorySlug: "regionales",
+      author: "Redaccion",
+      isFeatured: true,
+      featuredImageUrl:
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      tags: ["region", "turismo", "lagos"],
+      publishedAt: "2026-04-24T11:40:00.000Z",
+    },
+    {
+      title: "Autoridades de la region sur ajustan operativos viales por el inicio de las bajas temperaturas",
+      excerpt:
+        "Los organismos de control coordinan prevencion, senalizacion y monitoreo de rutas ante el avance del frio.",
+      content:
+        "Defensa Civil, Vialidad y equipos municipales trabajan en esquemas preventivos para rutas y accesos de la region sur de Neuquen y Rio Negro.\n\nLas medidas incluyen refuerzo de senalizacion, monitoreo meteorologico y campanas de concientizacion para conductores.\n\nEl objetivo es anticiparse a heladas, nieve temprana y cortes preventivos en corredores de alta circulacion.",
+      categorySlug: "regionales",
+      author: "Redaccion",
+      featuredImageUrl:
+        "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80",
+      tags: ["rutas", "frio", "prevencion"],
+      publishedAt: "2026-04-24T11:55:00.000Z",
     },
     {
       title: "Neuquen anuncia una nueva linea de creditos para pymes turisticas y prestadores de servicios",

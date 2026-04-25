@@ -197,7 +197,7 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
                   "rounded-full font-semibold uppercase tracking-[0.24em] transition-all duration-300",
                   isCompact ? "px-4 py-2.5 text-[13px]" : "px-5 py-3 text-sm",
                   index === 0
-                    ? "bg-[color:var(--lake-blue)] text-white shadow-[0_10px_30px_rgba(15,77,134,0.2)]"
+                    ? "bg-[color:var(--lake-blue)] !text-white shadow-[0_10px_30px_rgba(15,77,134,0.2)]"
                     : "bg-white/85 text-[color:var(--muted-foreground)] shadow-sm ring-1 ring-black/5 hover:bg-white",
                 )}
               >
