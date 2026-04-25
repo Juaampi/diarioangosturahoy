@@ -58,10 +58,13 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
       >
         <div
           className={cn(
-            "flex items-center justify-between gap-4 rounded-[32px] bg-white/62 shadow-[0_14px_50px_rgba(15,77,134,0.08)] ring-1 ring-black/5 transition-all duration-300 lg:px-6",
-            isCompact ? "px-3 py-2" : "px-4 py-4",
+            "overflow-hidden rounded-[32px] bg-white/62 shadow-[0_14px_50px_rgba(15,77,134,0.08)] ring-1 ring-black/5 transition-all duration-300 lg:px-6",
+            isCompact
+              ? "max-h-0 translate-y-[-8px] px-3 py-0 opacity-0 pointer-events-none"
+              : "max-h-[220px] px-4 py-4 opacity-100",
           )}
         >
+          <div className="flex items-center justify-between gap-4">
           <Link href="/" className="flex min-w-0 items-center gap-4 lg:gap-5">
             <div
               className={cn(
@@ -125,6 +128,7 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
+          </div>
         </div>
 
         <div
