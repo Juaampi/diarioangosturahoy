@@ -2,19 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, PlayCircle, Radio, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { SearchForm } from "@/components/site/search-form";
+import {
+  DEFAULT_RADIO_IMAGE,
+  DEFAULT_RADIO_URL,
+  DEFAULT_YOUTUBE_URL,
+} from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 type HeaderProps = {
   categories: { id: number; name: string; slug: string }[];
   siteName: string;
   tagline: string;
+  radioUrl?: string | null;
+  youtubeUrl?: string | null;
 };
 
-export function Header({ categories, siteName }: HeaderProps) {
+export function Header({ categories, siteName, radioUrl, youtubeUrl }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
 
@@ -52,7 +59,7 @@ export function Header({ categories, siteName }: HeaderProps) {
             isCompact ? "px-3 py-2" : "px-4 py-4",
           )}
         >
-          <Link href="/" className="flex min-w-0 items-center">
+          <Link href="/" className="flex min-w-0 items-center gap-4 lg:gap-5">
             <div
               className={cn(
                 "overflow-hidden rounded-[18px] bg-[#eaeaea] shadow-[inset_0_0_0_1px_rgba(17,40,63,0.06)] transition-all duration-300",
@@ -66,10 +73,28 @@ export function Header({ categories, siteName }: HeaderProps) {
                 height={756}
                 className={cn(
                   "w-auto object-contain transition-all duration-300",
-                  isCompact ? "h-[42px] sm:h-[54px] lg:h-[64px]" : "h-[56px] sm:h-[72px] lg:h-[100px]",
+                  isCompact ? "h-[40px] sm:h-[48px] lg:h-[56px]" : "h-[52px] sm:h-[62px] lg:h-[74px]",
                 )}
                 priority
               />
+            </div>
+            <div className="min-w-0">
+              <p
+                className={cn(
+                  "truncate font-serif font-bold leading-none text-[color:var(--ink)] transition-all duration-300",
+                  isCompact ? "text-xl sm:text-2xl lg:text-[2rem]" : "text-2xl sm:text-3xl lg:text-[2.6rem]",
+                )}
+              >
+                Diario Angostura Hoy
+              </p>
+              <p
+                className={cn(
+                  "mt-2 uppercase tracking-[0.42em] text-[color:var(--muted-foreground)] transition-all duration-300",
+                  isCompact ? "text-[10px] sm:text-[11px]" : "text-[11px] sm:text-xs",
+                )}
+              >
+                Diario Digital
+              </p>
             </div>
           </Link>
 
@@ -97,6 +122,54 @@ export function Header({ categories, siteName }: HeaderProps) {
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
+        </div>
+
+        <div
+          className={cn(
+            "mt-3 rounded-[28px] bg-white/72 p-3 shadow-[0_10px_35px_rgba(15,77,134,0.08)] ring-1 ring-black/5 transition-all duration-300",
+            isCompact ? "min-[980px]:py-2" : "",
+          )}
+        >
+          <div className="flex flex-col gap-3 min-[980px]:flex-row min-[980px]:items-center min-[980px]:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="relative h-14 w-24 overflow-hidden rounded-2xl border border-[color:var(--line)]">
+                <Image
+                  src={DEFAULT_RADIO_IMAGE}
+                  alt="Radio live"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
+                  Radio Live
+                </p>
+                <p className="text-sm text-[color:var(--muted-foreground)]">
+                  Escucha la radio online o mira la transmision en YouTube.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={radioUrl || DEFAULT_RADIO_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--forest-green)] px-4 py-2.5 text-sm font-semibold text-white"
+              >
+                <Radio className="h-4 w-4" />
+                Escuchar radio
+              </a>
+              <a
+                href={youtubeUrl || DEFAULT_YOUTUBE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-[#ff0000] px-4 py-2.5 text-sm font-semibold text-white"
+              >
+                <PlayCircle className="h-4 w-4" />
+                Ver YouTube live
+              </a>
+            </div>
+          </div>
         </div>
 
         <div className={cn("hidden min-[980px]:block", isCompact ? "mt-2" : "mt-4")}>

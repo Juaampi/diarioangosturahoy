@@ -309,9 +309,37 @@ async function main() {
       isActive: true,
     },
     {
+      title: "Escapadas y hospedajes de montana",
+      imageUrl:
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      position: "HOME_MIDDLE",
+      isActive: true,
+    },
+    {
       title: "Agenda cultural de la semana",
       imageUrl:
         "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80",
+      position: "SIDEBAR",
+      isActive: true,
+    },
+    {
+      title: "Comercios y servicios recomendados",
+      imageUrl:
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",
+      position: "SIDEBAR",
+      isActive: true,
+    },
+    {
+      title: "Moda outdoor y equipamiento",
+      imageUrl:
+        "https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1200&q=80",
+      position: "SIDEBAR",
+      isActive: true,
+    },
+    {
+      title: "Cabanas y refugios de montana",
+      imageUrl:
+        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
       position: "SIDEBAR",
       isActive: true,
     },

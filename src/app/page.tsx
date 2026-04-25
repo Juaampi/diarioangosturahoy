@@ -9,7 +9,7 @@ import { formatDate } from "@/lib/utils";
 
 export default async function Home() {
   const [{ embeds, settings }, homeData] = await Promise.all([getLayoutData(), getHomeData()]);
-  const { mainPost, featuredPosts, latestPosts, categories, topBanners, middleBanners } =
+  const { mainPost, featuredPosts, latestPosts, categories, topBanners, middleBanners, sidebarBanners } =
     homeData;
 
   return (
@@ -68,70 +68,87 @@ export default async function Home() {
           ))}
         </section>
 
-        <section className="space-y-10">
-          <div>
-            <div className="mb-5 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
-                  Ultimas noticias
-                </p>
-                <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Panorama local y regional</h2>
+        <section className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-10">
+            <div>
+              <div className="mb-5 flex items-end justify-between gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
+                    Ultimas noticias
+                  </p>
+                  <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Panorama local y regional</h2>
+                </div>
+                <Link href="/categoria/locales" className="text-sm font-semibold text-[color:var(--lake-blue)]">
+                  Ver Locales
+                </Link>
               </div>
-              <Link href="/categoria/locales" className="text-sm font-semibold text-[color:var(--lake-blue)]">
-                Ver Locales
-              </Link>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {latestPosts.slice(0, 6).map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
-          </div>
-
-          <BannerSlot banners={middleBanners} className="grid gap-4 md:grid-cols-2" />
-
-          <div className="rounded-[32px] border border-[color:var(--line)] bg-[linear-gradient(135deg,rgba(15,77,134,0.94),rgba(43,107,71,0.9))] p-8 text-white shadow-[0_20px_60px_rgba(15,77,134,0.2)]">
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/65">Comunidad en vivo</p>
-                <h3 className="mt-3 font-serif text-4xl">{settings.siteName}</h3>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80">
-                  Un diario local con enfoque moderno, agenda de comunidad, cobertura regional y espacios para radio, streaming y participacion de la audiencia.
-                </p>
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {latestPosts.slice(0, 6).map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
               </div>
-              <LiveEmbeds embeds={embeds as never} facebookUrl={settings.facebookUrl} />
             </div>
-          </div>
 
-          <div className="space-y-8">
-            {categories.map((category) => {
-              if (!category.posts.length) return null;
+            <BannerSlot banners={middleBanners.slice(0, 2)} className="grid gap-4 md:grid-cols-2" />
 
-              return (
-                <section key={category.id} className="space-y-5">
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
-                        Seccion
-                      </p>
-                      <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">{category.name}</h3>
+            <div className="rounded-[32px] border border-[color:var(--line)] bg-[linear-gradient(135deg,rgba(15,77,134,0.92),rgba(43,107,71,0.85))] p-8 text-white shadow-[0_20px_60px_rgba(15,77,134,0.2)]">
+              <div className="space-y-6">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/65">Comunidad en vivo</p>
+                  <h3 className="mt-3 font-serif text-4xl">{settings.siteName}</h3>
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80">
+                    Un diario local con enfoque moderno, agenda de comunidad, cobertura regional y espacios para radio, streaming y participacion de la audiencia.
+                  </p>
+                </div>
+                <LiveEmbeds embeds={embeds as never} facebookUrl={settings.facebookUrl} />
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              {categories.map((category) => {
+                if (!category.posts.length) return null;
+
+                return (
+                  <section key={category.id} className="space-y-5">
+                    <div className="flex items-end justify-between gap-4">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
+                          Seccion
+                        </p>
+                        <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">{category.name}</h3>
+                      </div>
+                      <Link
+                        href={`/categoria/${category.slug}`}
+                        className="text-sm font-semibold text-[color:var(--lake-blue)]"
+                      >
+                        Ver mas
+                      </Link>
                     </div>
-                    <Link
-                      href={`/categoria/${category.slug}`}
-                      className="text-sm font-semibold text-[color:var(--lake-blue)]"
-                    >
-                      Ver mas
-                    </Link>
-                  </div>
-                  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {category.posts.slice(0, 3).map((post) => (
-                      <PostCard key={post.id} post={post} compact />
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
+                    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                      {category.posts.slice(0, 3).map((post) => (
+                        <PostCard key={post.id} post={post} compact />
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
           </div>
+
+          <aside className="space-y-5">
+            <div className="xl:sticky xl:top-[220px] xl:space-y-5">
+              <div className="rounded-[28px] border border-[color:var(--line)] bg-white/85 p-5 shadow-[0_16px_40px_rgba(18,59,103,0.08)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
+                  Publicidad
+                </p>
+                <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">Espacios comerciales</h3>
+                <p className="mt-3 text-sm leading-7 text-[color:var(--muted-foreground)]">
+                  Este lateral derecho acompana toda la lectura y admite varios banners administrados desde el panel.
+                </p>
+              </div>
+              <BannerSlot banners={sidebarBanners} className="space-y-4" />
+            </div>
+          </aside>
         </section>
       </div>
     </div>

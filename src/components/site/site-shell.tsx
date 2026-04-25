@@ -32,7 +32,13 @@ export function SiteShell({ children, settings, categories }: SiteShellProps) {
 
   return (
     <div className="min-h-screen">
-      <Header categories={categories} siteName={settings.siteName} tagline={settings.tagline} />
+      <Header
+        categories={categories}
+        siteName={settings.siteName}
+        tagline={settings.tagline}
+        radioUrl={settings.facebookUrl}
+        youtubeUrl={settings.youtubeUrl}
+      />
       <main>{children}</main>
       <Footer
         siteName={settings.siteName}

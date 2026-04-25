@@ -1,5 +1,6 @@
 import {
   DEFAULT_FACEBOOK_URL,
+  DEFAULT_RADIO_URL,
   DEFAULT_YOUTUBE_EMBED,
   DEFAULT_YOUTUBE_URL,
 } from "@/lib/constants";
@@ -25,26 +26,30 @@ export function LiveEmbeds({
   facebookUrl?: string | null;
 }) {
   const activeEmbeds = embeds.filter((embed) => embed.isActive);
+  const youtubeEmbed = activeEmbeds.find((embed) => embed.type === "YOUTUBE");
+  const radioEmbed = activeEmbeds.find((embed) => embed.type === "RADIO");
 
   if (!activeEmbeds.length) {
     return (
-      <section className="grid gap-6 lg:grid-cols-2">
-        <article className="overflow-hidden rounded-[28px] border border-[color:var(--line)] bg-white p-6 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
-          <div className="mb-4 flex items-center justify-between">
+      <section className="grid gap-6 xl:grid-cols-[1.65fr_0.95fr]">
+        <article className="overflow-hidden rounded-[32px] border border-[color:var(--line)] bg-white p-5 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
+          <div className="mb-4 flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted-foreground)]">
-                En vivo
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
+                YouTube en vivo
               </p>
-              <h3 className="mt-2 font-serif text-2xl text-[color:var(--ink)]">Radio en vivo</h3>
+              <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">Streaming de prueba</h3>
             </div>
-            <span className="rounded-full bg-[color:var(--warm-accent)]/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--forest-green)]">
-              Streaming
-            </span>
+            <a
+              href={DEFAULT_YOUTUBE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-[#ff0000] px-4 py-2 text-sm font-semibold text-white"
+            >
+              Abrir YouTube
+            </a>
           </div>
-          <p className="text-sm leading-7 text-[color:var(--muted-foreground)]">
-            Este espacio ya quedo reservado para la transmision en vivo de la radio por YouTube. Mientras tanto, dejamos un video demo de Villa La Angostura para mostrar como queda el modulo.
-          </p>
-          <div className="mt-5 overflow-hidden rounded-[20px] border border-[color:var(--line)] bg-black">
+          <div className="overflow-hidden rounded-[24px] border border-[color:var(--line)] bg-black shadow-[0_18px_40px_rgba(0,0,0,0.2)]">
             <iframe
               src={DEFAULT_YOUTUBE_EMBED}
               title="Video demo Villa La Angostura"
@@ -53,28 +58,34 @@ export function LiveEmbeds({
               className="aspect-video w-full"
             />
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
+        </article>
+
+        <article className="flex flex-col justify-between rounded-[32px] border border-[color:var(--line)] bg-white p-6 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
+              Radio en vivo
+            </p>
+            <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">Escuchar online</h3>
+            <p className="mt-4 text-sm leading-7 text-[color:var(--muted-foreground)]">
+              Este modulo esta listo para la radio live. Por ahora mostramos una version de demo para visualizar como va a convivir con el streaming de YouTube.
+            </p>
+          </div>
+          <div className="mt-6 flex flex-col gap-3">
             <a
-              href={DEFAULT_YOUTUBE_URL}
+              href={DEFAULT_RADIO_URL}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded-full bg-[color:var(--forest-green)] px-5 py-3 text-sm font-semibold text-white"
+              className="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-green)] px-5 py-3 text-sm font-semibold text-white"
             >
-              Ver demo en YouTube
+              Escuchar radio
             </a>
             <a
               href={facebookUrl || DEFAULT_FACEBOOK_URL}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex rounded-full bg-[color:var(--lake-blue)] px-5 py-3 text-sm font-semibold text-white"
+              className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-5 py-3 text-sm font-semibold text-[color:var(--lake-blue)]"
             >
               Ver Facebook
-            </a>
-            <a
-              href="/admin/settings"
-              className="inline-flex rounded-full border border-[color:var(--line)] px-5 py-3 text-sm font-semibold text-[color:var(--lake-blue)]"
-            >
-              Configurar YouTube
             </a>
           </div>
         </article>
@@ -83,44 +94,81 @@ export function LiveEmbeds({
   }
 
   return (
-    <section className="grid gap-6 lg:grid-cols-2">
-      {activeEmbeds.map((embed) => (
-        <article
-          key={embed.id}
-          className="overflow-hidden rounded-[28px] border border-[color:var(--line)] bg-white p-6 shadow-[0_18px_50px_rgba(18,59,103,0.08)]"
-        >
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted-foreground)]">
-                En vivo
-              </p>
-              <h3 className="mt-2 font-serif text-2xl text-[color:var(--ink)]">{embed.title}</h3>
-            </div>
-            <span className="rounded-full bg-[color:var(--warm-accent)]/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--forest-green)]">
-              {embed.type === "RADIO" ? "Radio" : "YouTube"}
-            </span>
-          </div>
-          {embed.iframe ? (
-            <div
-              className="prose max-w-none overflow-hidden rounded-[20px] border border-[color:var(--line)]"
-              dangerouslySetInnerHTML={iframeMarkup(embed.iframe)}
-            />
-          ) : embed.url ? (
-            <a
-              href={embed.url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex rounded-full bg-[color:var(--lake-blue)] px-5 py-3 text-sm font-semibold text-white"
-            >
-              Abrir transmision
-            </a>
-          ) : (
-            <p className="text-sm text-[color:var(--muted-foreground)]">
-              Carga la URL o el iframe desde el panel de administracion.
+    <section className="grid gap-6 xl:grid-cols-[1.65fr_0.95fr]">
+      <article className="overflow-hidden rounded-[32px] border border-[color:var(--line)] bg-white p-5 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
+              YouTube en vivo
             </p>
-          )}
-        </article>
-      ))}
+            <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">
+              {youtubeEmbed?.title || "Streaming en vivo"}
+            </h3>
+          </div>
+          <a
+            href={youtubeEmbed?.url || DEFAULT_YOUTUBE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full bg-[#ff0000] px-4 py-2 text-sm font-semibold text-white"
+          >
+            Abrir YouTube
+          </a>
+        </div>
+        {youtubeEmbed?.iframe ? (
+          <div
+            className="prose max-w-none overflow-hidden rounded-[24px] border border-[color:var(--line)] shadow-[0_18px_40px_rgba(0,0,0,0.2)]"
+            dangerouslySetInnerHTML={iframeMarkup(youtubeEmbed.iframe)}
+          />
+        ) : (
+          <div className="overflow-hidden rounded-[24px] border border-[color:var(--line)] bg-black shadow-[0_18px_40px_rgba(0,0,0,0.2)]">
+            <iframe
+              src={DEFAULT_YOUTUBE_EMBED}
+              title="Video demo Villa La Angostura"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="aspect-video w-full"
+            />
+          </div>
+        )}
+      </article>
+
+      <article className="flex flex-col justify-between rounded-[32px] border border-[color:var(--line)] bg-white p-6 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
+            Radio en vivo
+          </p>
+          <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">
+            {radioEmbed?.title || "Escuchar online"}
+          </h3>
+          <p className="mt-4 text-sm leading-7 text-[color:var(--muted-foreground)]">
+            Acceso rapido a la radio online y a la transmision social del medio. Este bloque esta pensado para convivir con el vivo principal de YouTube.
+          </p>
+        </div>
+        <div className="mt-6 flex flex-col gap-3">
+          <a
+            href={radioEmbed?.url || DEFAULT_RADIO_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-green)] px-5 py-3 text-sm font-semibold text-white"
+          >
+            Escuchar radio
+          </a>
+          <a
+            href={facebookUrl || DEFAULT_FACEBOOK_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-5 py-3 text-sm font-semibold text-[color:var(--lake-blue)]"
+          >
+            Ver Facebook
+          </a>
+          <a
+            href="/admin/settings"
+            className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-5 py-3 text-sm font-semibold text-[color:var(--muted-foreground)]"
+          >
+            Configurar vivos
+          </a>
+        </div>
+      </article>
     </section>
   );
 }
