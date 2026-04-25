@@ -39,14 +39,18 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navItems = [
-    { href: "/", label: "Inicio" },
-    ...categories.map((category) => ({
-      href: `/categoria/${category.slug}`,
-      label: category.name,
-    })),
-    { href: "/noticias-externas", label: "Externas" },
-  ];
+  const categoryOrder = ["locales", "regionales", "nacionales", "internacionales", "deporte"];
+  const orderedCategories = [...categories].sort((left, right) => {
+    const leftIndex = categoryOrder.indexOf(left.slug);
+    const rightIndex = categoryOrder.indexOf(right.slug);
+
+    return (leftIndex === -1 ? 999 : leftIndex) - (rightIndex === -1 ? 999 : rightIndex);
+  });
+
+  const navItems = orderedCategories.map((category) => ({
+    href: `/categoria/${category.slug}`,
+    label: category.slug === "deporte" ? "Deportes" : category.name,
+  }));
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/5 bg-[#eaeaea]/95 backdrop-blur-xl">
