@@ -4,6 +4,7 @@ import {
   DEFAULT_YOUTUBE_EMBED,
   DEFAULT_YOUTUBE_URL,
 } from "@/lib/constants";
+import { RadioPlayButton } from "@/components/site/radio-play-button";
 
 type LiveEmbed = {
   id: string;
@@ -71,14 +72,7 @@ export function LiveEmbeds({
             </p>
           </div>
           <div className="mt-6 flex flex-col gap-3">
-            <a
-              href={DEFAULT_RADIO_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-green)] px-5 py-3 text-sm font-semibold text-white"
-            >
-              Escuchar radio
-            </a>
+            <RadioPlayButton label="Escuchar radio" />
             <a
               href={facebookUrl || DEFAULT_FACEBOOK_URL}
               target="_blank"
@@ -145,13 +139,14 @@ export function LiveEmbeds({
           </p>
         </div>
         <div className="mt-6 flex flex-col gap-3">
+          <RadioPlayButton label="Escuchar radio" />
           <a
             href={radioEmbed?.url || DEFAULT_RADIO_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-green)] px-5 py-3 text-sm font-semibold text-white"
+            className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-5 py-3 text-sm font-semibold text-[color:var(--forest-green)]"
           >
-            Escuchar radio
+            Ir a la radio
           </a>
           <a
             href={facebookUrl || DEFAULT_FACEBOOK_URL}

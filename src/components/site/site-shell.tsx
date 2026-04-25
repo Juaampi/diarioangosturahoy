@@ -38,6 +38,7 @@ export function SiteShell({ children, settings, categories }: SiteShellProps) {
         tagline={settings.tagline}
         radioUrl={settings.facebookUrl}
         youtubeUrl={settings.youtubeUrl}
+        radioStreamUrl="https://streaming.escuchanosonline.com:7109/stream"
       />
       <main>{children}</main>
       <Footer

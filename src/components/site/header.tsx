@@ -2,13 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, PlayCircle, Radio, X } from "lucide-react";
+import { Menu, PlayCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { RadioPlayButton } from "@/components/site/radio-play-button";
 import { SearchForm } from "@/components/site/search-form";
 import {
   DEFAULT_RADIO_IMAGE,
   DEFAULT_RADIO_URL,
+  DEFAULT_RADIO_STREAM_URL,
   DEFAULT_YOUTUBE_URL,
 } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -19,9 +21,10 @@ type HeaderProps = {
   tagline: string;
   radioUrl?: string | null;
   youtubeUrl?: string | null;
+  radioStreamUrl?: string | null;
 };
 
-export function Header({ categories, siteName, radioUrl, youtubeUrl }: HeaderProps) {
+export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStreamUrl }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
 
@@ -132,12 +135,12 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl }: HeaderPro
         >
           <div className="flex flex-col gap-3 min-[980px]:flex-row min-[980px]:items-center min-[980px]:justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative h-14 w-24 overflow-hidden rounded-2xl border border-[color:var(--line)]">
+              <div className="relative flex h-14 w-24 items-center justify-center overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white p-2">
                 <Image
                   src={DEFAULT_RADIO_IMAGE}
                   alt="Radio live"
                   fill
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
               <div>
@@ -150,14 +153,18 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl }: HeaderPro
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
+              <RadioPlayButton
+                streamUrl={radioStreamUrl || DEFAULT_RADIO_STREAM_URL}
+                className="px-4 py-2.5"
+                label="Escuchar radio"
+              />
               <a
                 href={radioUrl || DEFAULT_RADIO_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--forest-green)] px-4 py-2.5 text-sm font-semibold text-white"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] bg-white px-4 py-2.5 text-sm font-semibold text-[color:var(--forest-green)]"
               >
-                <Radio className="h-4 w-4" />
-                Escuchar radio
+                Ir a la radio
               </a>
               <a
                 href={youtubeUrl || DEFAULT_YOUTUBE_URL}

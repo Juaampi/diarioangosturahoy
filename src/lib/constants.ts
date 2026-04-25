@@ -8,7 +8,9 @@ export const DEFAULT_YOUTUBE_EMBED =
   "https://www.youtube.com/embed/Xkb-Onz87CU";
 export const DEFAULT_RADIO_URL = "https://www.facebook.com/fm.estilo.vla";
 export const DEFAULT_RADIO_IMAGE =
-  "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=1200&q=80";
+  "https://escuchanosonline.com/clientes/img/logos/d1b3917b71d08439acca2d9084c8241b.jpg";
+export const DEFAULT_RADIO_STREAM_URL =
+  "https://streaming.escuchanosonline.com:7109/stream";
 
 export const CATEGORY_SEED = [
   { name: "Locales", slug: "locales" },
