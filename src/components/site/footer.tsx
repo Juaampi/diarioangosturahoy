@@ -51,6 +51,14 @@ export function Footer({ footerText, siteName, location, contactEmail, socialLin
           </div>
         </div>
       </div>
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 text-xs text-white/60 lg:px-6">
+          <p>{siteName}. Todos los derechos reservados.</p>
+          <a href="https://andinaweb.com.ar" target="_blank" rel="noreferrer" className="hover:text-white">
+            Desarrollado por Andina Web
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }

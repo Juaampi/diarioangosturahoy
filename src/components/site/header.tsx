@@ -30,7 +30,13 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
 
   useEffect(() => {
     function onScroll() {
-      setIsCompact(window.scrollY > 40);
+      const scrollY = window.scrollY;
+
+      setIsCompact((previous) => {
+        if (!previous && scrollY > 88) return true;
+        if (previous && scrollY < 24) return false;
+        return previous;
+      });
     }
 
     onScroll();
