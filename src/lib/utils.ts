@@ -34,6 +34,20 @@ export function toAbsoluteMediaUrl(value?: string | null) {
   return absoluteUrl(value.startsWith("/") ? value : `/${value}`);
 }
 
+export function toOpenGraphImageUrl(value?: string | null) {
+  const imageUrl = toAbsoluteMediaUrl(value);
+  if (!imageUrl) return undefined;
+
+  if (imageUrl.includes("res.cloudinary.com/") && imageUrl.includes("/upload/")) {
+    return imageUrl.replace(
+      "/upload/",
+      "/upload/f_auto,q_auto,c_fill,g_auto,w_1200,h_630/",
+    );
+  }
+
+  return imageUrl;
+}
+
 export function formatDate(date?: Date | string | null) {
   if (!date) return "";
 

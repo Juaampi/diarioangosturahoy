@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BannerSlot } from "@/components/site/banner-slot";
 import { PostCard } from "@/components/site/post-card";
 import { getPublishedPostBySlug } from "@/lib/queries";
-import { absoluteUrl, formatDate, paragraphize, toAbsoluteMediaUrl } from "@/lib/utils";
+import { absoluteUrl, formatDate, paragraphize, toOpenGraphImageUrl } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -20,7 +20,7 @@ export async function generateMetadata({
   }
 
   const articleUrl = absoluteUrl(`/noticia/${slug}`);
-  const imageUrl = toAbsoluteMediaUrl(data.post.featuredImageUrl);
+  const imageUrl = toOpenGraphImageUrl(data.post.featuredImageUrl);
   const description = data.post.excerpt || data.post.title;
 
   return {
@@ -33,7 +33,16 @@ export async function generateMetadata({
       title: data.post.title,
       description,
       url: articleUrl,
-      images: imageUrl ? [{ url: imageUrl, alt: data.post.title }] : [],
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              alt: data.post.title,
+              width: 1200,
+              height: 630,
+            },
+          ]
+        : [],
       type: "article",
       publishedTime: data.post.publishedAt?.toISOString(),
     },
@@ -57,6 +66,7 @@ export default async function ArticlePage({
   if (!data) notFound();
 
   const { post, relatedPosts, articleBottomBanners } = data;
+  const facebookShareUrl = absoluteUrl(`/share/${post.slug}`);
   const whatsappShare = `https://wa.me/?text=${encodeURIComponent(
     `${post.title} ${absoluteUrl(`/noticia/${post.slug}`)}`,
   )}`;
@@ -79,7 +89,7 @@ export default async function ArticlePage({
         ) : null}
         <div className="mt-6 flex flex-wrap gap-3">
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(absoluteUrl(`/noticia/${post.slug}`))}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookShareUrl)}`}
             target="_blank"
             rel="noreferrer"
             className="rounded-full border border-[color:var(--line)] px-4 py-2 text-sm font-semibold text-[color:var(--lake-blue)]"
