@@ -16,9 +16,14 @@ export function toSlug(value: string) {
 }
 
 export function absoluteUrl(pathname = "/") {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "http://localhost:3000";
+  const baseUrl = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.SITE_URL,
+    process.env.URL,
+    process.env.DEPLOY_PRIME_URL,
+  ]
+    .find((value) => Boolean(value && value.trim()))
+    ?.replace(/\/$/, "") || "https://diarioangosturahoy.com.ar";
 
   return pathname.startsWith("/") ? `${baseUrl}${pathname}` : `${baseUrl}/${pathname}`;
 }
