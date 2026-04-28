@@ -146,15 +146,6 @@ export default async function Home() {
 
           <aside className="space-y-5">
             <div className="xl:sticky xl:top-[220px] xl:space-y-5">
-              <div className="rounded-[28px] border border-[color:var(--line)] bg-white/85 p-5 shadow-[0_16px_40px_rgba(18,59,103,0.08)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--forest-green)]">
-                  Publicidad
-                </p>
-                <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">Espacios comerciales</h3>
-                <p className="mt-3 text-sm leading-7 text-[color:var(--muted-foreground)]">
-                  Este lateral derecho acompana toda la lectura y admite varios banners administrados desde el panel.
-                </p>
-              </div>
               <BannerSlot banners={sidebarBanners} className="space-y-4" />
             </div>
           </aside>
