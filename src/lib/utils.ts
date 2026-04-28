@@ -28,6 +28,12 @@ export function absoluteUrl(pathname = "/") {
   return pathname.startsWith("/") ? `${baseUrl}${pathname}` : `${baseUrl}/${pathname}`;
 }
 
+export function toAbsoluteMediaUrl(value?: string | null) {
+  if (!value) return undefined;
+  if (/^https?:\/\//i.test(value)) return value;
+  return absoluteUrl(value.startsWith("/") ? value : `/${value}`);
+}
+
 export function formatDate(date?: Date | string | null) {
   if (!date) return "";
 

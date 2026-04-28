@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BannerSlot } from "@/components/site/banner-slot";
 import { PostCard } from "@/components/site/post-card";
 import { getPublishedPostBySlug } from "@/lib/queries";
-import { absoluteUrl, formatDate, paragraphize } from "@/lib/utils";
+import { absoluteUrl, formatDate, paragraphize, toAbsoluteMediaUrl } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -19,15 +19,29 @@ export async function generateMetadata({
     return { title: "Noticia no encontrada" };
   }
 
+  const articleUrl = absoluteUrl(`/noticia/${slug}`);
+  const imageUrl = toAbsoluteMediaUrl(data.post.featuredImageUrl);
+  const description = data.post.excerpt || data.post.title;
+
   return {
     title: data.post.title,
-    description: data.post.excerpt || data.post.title,
+    description,
+    alternates: {
+      canonical: articleUrl,
+    },
     openGraph: {
       title: data.post.title,
-      description: data.post.excerpt || data.post.title,
-      url: absoluteUrl(`/noticia/${slug}`),
-      images: data.post.featuredImageUrl ? [{ url: data.post.featuredImageUrl }] : [],
+      description,
+      url: articleUrl,
+      images: imageUrl ? [{ url: imageUrl, alt: data.post.title }] : [],
       type: "article",
+      publishedTime: data.post.publishedAt?.toISOString(),
+    },
+    twitter: {
+      card: imageUrl ? "summary_large_image" : "summary",
+      title: data.post.title,
+      description,
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }
