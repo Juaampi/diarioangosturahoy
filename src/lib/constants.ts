@@ -3,6 +3,9 @@ export const SITE_TAGLINE = "Diario Digital";
 export const SITE_LOCATION = "Villa La Angostura, Neuquen, Argentina";
 export const DEFAULT_WHATSAPP_NUMBER = "+549 2944 345171";
 export const DEFAULT_FACEBOOK_URL = "https://www.facebook.com/fm.estilo.vla";
+export const DEFAULT_HEADER_FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61588909205334";
+export const DEFAULT_HEADER_INSTAGRAM_URL = "https://www.instagram.com/diarioangosturahoy/";
+export const DEFAULT_HEADER_X_URL = "https://x.com/DiarioAngostura";
 export const DEFAULT_YOUTUBE_URL = "https://youtu.be/Xkb-Onz87CU";
 export const DEFAULT_YOUTUBE_EMBED =
   "https://www.youtube.com/embed/Xkb-Onz87CU";
