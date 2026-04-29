@@ -66,7 +66,6 @@ export default async function ArticlePage({
   if (!data) notFound();
 
   const { post, relatedPosts, articleBottomBanners } = data;
-  const facebookShareUrl = absoluteUrl(`/share/${post.slug}`);
   const whatsappShare = `https://wa.me/?text=${encodeURIComponent(
     `${post.title} ${absoluteUrl(`/noticia/${post.slug}`)}`,
   )}`;
@@ -89,7 +88,7 @@ export default async function ArticlePage({
         ) : null}
         <div className="mt-6 flex flex-wrap gap-3">
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookShareUrl)}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(absoluteUrl(`/noticia/${post.slug}`))}`}
             target="_blank"
             rel="noreferrer"
             className="rounded-full border border-[color:var(--line)] px-4 py-2 text-sm font-semibold text-[color:var(--lake-blue)]"

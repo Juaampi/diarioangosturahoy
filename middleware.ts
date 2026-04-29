@@ -5,6 +5,18 @@ import { verifySessionToken } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
+  const isFacebookCrawler =
+    userAgent.includes("facebookexternalhit") || userAgent.includes("facebot");
+
+  if (isFacebookCrawler && pathname.startsWith("/noticia/")) {
+    const slug = pathname.slice("/noticia/".length);
+
+    if (slug) {
+      const shareUrl = new URL(`/share/${slug}`, request.url);
+      return NextResponse.rewrite(shareUrl);
+    }
+  }
 
   if (!pathname.startsWith("/admin") || pathname.startsWith("/admin/login")) {
     return NextResponse.next();
