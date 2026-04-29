@@ -7,6 +7,7 @@ import { getAdminDashboardData } from "@/lib/queries";
 export default async function AdminPage() {
   await requireAdmin();
   const { posts, banners, categories, settings, embeds } = await getAdminDashboardData();
+  const categoryNameById = new Map(categories.map((category) => [category.id, category.name]));
 
   const cards = [
     { label: "Noticias", value: posts.length },
@@ -47,7 +48,7 @@ export default async function AdminPage() {
                 <div>
                   <p className="font-semibold text-[color:var(--ink)]">{post.title}</p>
                   <p className="text-sm text-[color:var(--muted-foreground)]">
-                    {post.category?.name || "Sin categoria"} · {post.status}
+                    {categoryNameById.get(post.categoryId ?? -1) || "Sin categoria"} · {post.status}
                   </p>
                 </div>
                 <span className="text-sm font-semibold text-[color:var(--lake-blue)]">Editar</span>
