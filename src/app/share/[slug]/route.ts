@@ -24,10 +24,12 @@ export async function GET(
   }
 
   const articleUrl = absoluteUrl(`/noticia/${slug}`);
+  const shareUrl = absoluteUrl(`/share/${slug}`);
   const imageUrl = toOpenGraphImageUrl(data.post.featuredImageUrl) || absoluteUrl("/logo.jpg");
   const title = escapeHtml(data.post.title);
   const description = escapeHtml(data.post.excerpt || data.post.title);
   const safeArticleUrl = escapeHtml(articleUrl);
+  const safeShareUrl = escapeHtml(shareUrl);
   const safeImageUrl = escapeHtml(imageUrl);
 
   const html = `<!DOCTYPE html>
@@ -36,9 +38,8 @@ export async function GET(
     <meta charset="utf-8" />
     <title>${title}</title>
     <meta name="description" content="${description}" />
-    <link rel="canonical" href="${safeArticleUrl}" />
-    <meta property="og:url" content="${safeArticleUrl}" />
-    <meta property="og:type" content="article" />
+    <meta property="og:url" content="${safeShareUrl}" />
+    <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Diario Angostura Hoy" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
@@ -49,11 +50,13 @@ export async function GET(
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
     <meta name="twitter:image" content="${safeImageUrl}" />
-    <meta http-equiv="refresh" content="0;url=${safeArticleUrl}" />
   </head>
   <body>
-    <script>window.location.replace(${JSON.stringify(articleUrl)});</script>
-    <p>Redirigiendo a <a href="${safeArticleUrl}">${safeArticleUrl}</a></p>
+    <main>
+      <h1>${title}</h1>
+      <p>${description}</p>
+      <p><a href="${safeArticleUrl}">Leer noticia</a></p>
+    </main>
   </body>
 </html>`;
 
