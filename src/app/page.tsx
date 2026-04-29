@@ -74,6 +74,7 @@ export default async function Home() {
             <div className="space-y-8">
               {orderedCategories.map((category) => {
                 if (!category.posts.length) return null;
+                const postsToRender = category.slug === "locales" ? category.posts.slice(0, 6) : category.posts.slice(0, 3);
 
                 return (
                   <section key={category.id} className="space-y-5">
@@ -92,7 +93,7 @@ export default async function Home() {
                       </Link>
                     </div>
                     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                      {category.posts.slice(0, 3).map((post) => (
+                      {postsToRender.map((post) => (
                         <PostCard key={post.id} post={post} compact />
                       ))}
                     </div>

@@ -7,7 +7,14 @@ import { prisma } from "@/lib/prisma";
 
 export default async function NewPostPage() {
   await requireAdmin();
-  const categories = await prisma.category.findMany({ orderBy: { name: "asc" } });
+  const [categories, homeOrderAggregate] = await Promise.all([
+    prisma.category.findMany({ orderBy: { name: "asc" } }),
+    prisma.post.aggregate({
+      _max: { homeOrder: true },
+      where: { deletedAt: null },
+    }),
+  ]);
+  const suggestedHomeOrder = (homeOrderAggregate._max.homeOrder ?? 0) + 1;
 
   return (
     <AdminShell title="Nueva noticia">
@@ -65,10 +72,23 @@ export default async function NewPostPage() {
             <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Fecha de publicacion</label>
             <input type="datetime-local" name="publishedAt" className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3" />
           </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Orden en home</label>
+            <input
+              type="number"
+              name="homeOrder"
+              defaultValue={suggestedHomeOrder}
+              min={0}
+              className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3"
+            />
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              Numero sugerido para salir primero: {suggestedHomeOrder}. A mayor numero, mas arriba aparece en la portada.
+            </p>
+          </div>
           <div className="space-y-3">
             <label className="flex items-center gap-3 text-sm text-[color:var(--ink)]">
               <input type="checkbox" name="isMain" />
-              Marcar como principal
+              Marcar como noticia principal
             </label>
             <label className="flex items-center gap-3 text-sm text-[color:var(--ink)]">
               <input type="checkbox" name="isFeatured" />

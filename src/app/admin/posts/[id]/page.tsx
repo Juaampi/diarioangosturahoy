@@ -113,10 +113,23 @@ export default async function EditPostPage({
               className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3"
             />
           </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Orden en home</label>
+            <input
+              type="number"
+              name="homeOrder"
+              defaultValue={post.homeOrder}
+              min={0}
+              className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3"
+            />
+            <p className="mt-2 text-xs text-[color:var(--muted-foreground)]">
+              A mayor numero, mas arriba aparece en la portada.
+            </p>
+          </div>
           <div className="space-y-3">
             <label className="flex items-center gap-3 text-sm text-[color:var(--ink)]">
               <input type="checkbox" name="isMain" defaultChecked={post.isMain} />
-              Marcar como principal
+              Marcar como noticia principal
             </label>
             <label className="flex items-center gap-3 text-sm text-[color:var(--ink)]">
               <input type="checkbox" name="isFeatured" defaultChecked={post.isFeatured} />

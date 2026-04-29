@@ -74,8 +74,8 @@ export default async function AdminBannersPage() {
                     {banner.position}
                   </span>
                 </div>
-                <div className="relative h-28 overflow-hidden rounded-2xl border border-[color:var(--line)]">
-                  <Image src={banner.imageUrl} alt={banner.title} fill className="object-cover" />
+                <div className="relative flex h-28 items-center justify-center overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white p-3">
+                  <Image src={banner.imageUrl} alt={banner.title} fill className="object-contain p-2" />
                 </div>
                 <div className="grid gap-4">
                   <input

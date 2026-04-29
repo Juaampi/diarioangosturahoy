@@ -81,6 +81,14 @@ function toOptionalDate(input: FormDataEntryValue | null) {
   return value ? new Date(value) : null;
 }
 
+function toOptionalNumber(input: FormDataEntryValue | null, fallback?: number) {
+  if (typeof input !== "string") return fallback ?? null;
+  const trimmed = input.trim();
+  if (!trimmed.length) return fallback ?? null;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : fallback ?? null;
+}
+
 async function syncTags(postId: string, tagsValue: string | null) {
   const tagNames = (tagsValue || "")
     .split(",")
@@ -104,6 +112,15 @@ async function syncTags(postId: string, tagsValue: string | null) {
       },
     });
   }
+}
+
+async function getNextHomeOrder() {
+  const aggregate = await prisma.post.aggregate({
+    _max: { homeOrder: true },
+    where: { deletedAt: null },
+  });
+
+  return (aggregate._max.homeOrder ?? 0) + 1;
 }
 
 export async function loginAction(formData: FormData) {
@@ -153,6 +170,19 @@ export async function savePostAction(formData: FormData) {
     }
   }
 
+  const currentPost = id
+    ? await prisma.post.findUnique({
+        where: { id },
+        select: { homeOrder: true },
+      })
+    : null;
+
+  const requestedHomeOrder = toOptionalNumber(formData.get("homeOrder"));
+  const homeOrder =
+    requestedHomeOrder ??
+    currentPost?.homeOrder ??
+    (await getNextHomeOrder());
+
   const data = {
     title,
     slug: await ensureUniquePostSlug(title, id || undefined),
@@ -165,6 +195,7 @@ export async function savePostAction(formData: FormData) {
       : PostStatus.DRAFT,
     isMain: toBoolean(formData.get("isMain")),
     isFeatured: toBoolean(formData.get("isFeatured")),
+    homeOrder,
     sourceType:
       String(formData.get("sourceType") || "MANUAL") === "NEWSAPI"
         ? SourceType.NEWSAPI
@@ -178,6 +209,13 @@ export async function savePostAction(formData: FormData) {
 
   if (data.status === PostStatus.PUBLISHED && !data.publishedAt) {
     data.publishedAt = new Date();
+  }
+
+  if (data.isMain) {
+    await prisma.post.updateMany({
+      where: id ? { id: { not: id } } : {},
+      data: { isMain: false },
+    });
   }
 
   const post = id
@@ -196,6 +234,51 @@ export async function savePostAction(formData: FormData) {
   revalidatePath("/admin/posts");
   revalidatePath(`/noticia/${post.slug}`);
   redirect(`/admin/posts/${post.id}?saved=1`);
+}
+
+export async function updatePostDisplayAction(formData: FormData) {
+  await requireAdmin();
+
+  const id = String(formData.get("id") || "").trim();
+
+  if (!id) {
+    throw new Error("La noticia es obligatoria.");
+  }
+
+  const existingPost = await prisma.post.findUnique({
+    where: { id },
+    select: { homeOrder: true },
+  });
+
+  if (!existingPost) {
+    throw new Error("La noticia no existe.");
+  }
+
+  const homeOrder = toOptionalNumber(formData.get("homeOrder"), existingPost.homeOrder) ?? existingPost.homeOrder;
+  const makeMain = toBoolean(formData.get("makeMain"));
+
+  if (makeMain) {
+    await prisma.$transaction([
+      prisma.post.updateMany({
+        where: { id: { not: id } },
+        data: { isMain: false },
+      }),
+      prisma.post.update({
+        where: { id },
+        data: { isMain: true, homeOrder },
+      }),
+    ]);
+  } else {
+    await prisma.post.update({
+      where: { id },
+      data: { homeOrder },
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath("/admin/posts");
+  redirect("/admin/posts?updated=1");
 }
 
 export async function deletePostAction(formData: FormData) {

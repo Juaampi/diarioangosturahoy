@@ -73,6 +73,7 @@ model Post {
   status           PostStatus  @default(DRAFT)
   isMain           Boolean     @default(false)
   isFeatured       Boolean     @default(false)
+  homeOrder        Int         @default(999)
   sourceType       SourceType  @default(MANUAL)
   sourceName       String?
   externalUrl      String?     @unique

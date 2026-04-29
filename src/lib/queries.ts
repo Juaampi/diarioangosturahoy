@@ -7,6 +7,8 @@ const PUBLISHED_FILTER = {
   deletedAt: null,
 };
 
+const HOME_ORDER = [{ homeOrder: "desc" as const }, { publishedAt: "desc" as const }, { createdAt: "desc" as const }];
+
 export async function getLayoutData() {
   const [settings, embeds, categories] = await Promise.all([
     prisma.siteSetting.upsert({
@@ -27,18 +29,18 @@ export async function getHomeData() {
       prisma.post.findFirst({
         where: { ...PUBLISHED_FILTER, isMain: true },
         include: { category: true, tags: { include: { tag: true } } },
-        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        orderBy: HOME_ORDER,
       }),
       prisma.post.findMany({
         where: { ...PUBLISHED_FILTER, isFeatured: true },
         include: { category: true, tags: { include: { tag: true } } },
-        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        orderBy: HOME_ORDER,
         take: 4,
       }),
       prisma.post.findMany({
         where: PUBLISHED_FILTER,
         include: { category: true, tags: { include: { tag: true } } },
-        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        orderBy: HOME_ORDER,
         take: 12,
       }),
       prisma.category.findMany({
@@ -47,8 +49,8 @@ export async function getHomeData() {
           posts: {
             where: PUBLISHED_FILTER,
             include: { category: true, tags: { include: { tag: true } } },
-            orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
-            take: 4,
+            orderBy: HOME_ORDER,
+            take: 6,
           },
         },
       }),
@@ -160,7 +162,7 @@ export async function getAdminDashboardData() {
     prisma.post.findMany({
       where: { deletedAt: null },
       include: { category: true, tags: { include: { tag: true } } },
-      orderBy: { updatedAt: "desc" },
+      orderBy: [{ isMain: "desc" }, { homeOrder: "desc" }, { updatedAt: "desc" }],
     }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),
     prisma.banner.findMany({ orderBy: { createdAt: "desc" } }),
