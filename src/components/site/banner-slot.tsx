@@ -1,9 +1,11 @@
-import Image from "next/image";
+import { BannerCarousel } from "@/components/site/banner-carousel";
 
 type Banner = {
   id: string;
   title: string;
   imageUrl: string;
+  slideUrls?: string | null;
+  slidesJson?: string | null;
   link: string | null;
 };
 
@@ -19,27 +21,7 @@ export function BannerSlot({
   return (
     <div className={className}>
       {banners.map((banner) => {
-        const content = (
-          <div className="overflow-hidden rounded-[24px] border border-[color:var(--line)] bg-white shadow-[0_14px_40px_rgba(18,59,103,0.08)]">
-            <div className="relative flex h-36 items-center justify-center bg-white p-3">
-              <Image src={banner.imageUrl} alt={banner.title} fill className="object-contain p-2" />
-            </div>
-            <div className="p-4">
-              <p className="text-sm font-semibold text-[color:var(--ink)]">{banner.title}</p>
-              <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-[color:var(--muted-foreground)]">
-                Espacio publicitario
-              </p>
-            </div>
-          </div>
-        );
-
-        return banner.link ? (
-          <a key={banner.id} href={banner.link} target="_blank" rel="noreferrer" className="block">
-            {content}
-          </a>
-        ) : (
-          <div key={banner.id}>{content}</div>
-        );
+        return <BannerCarousel key={banner.id} banner={banner} />;
       })}
     </div>
   );

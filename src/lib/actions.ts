@@ -89,6 +89,42 @@ function toOptionalNumber(input: FormDataEntryValue | null, fallback?: number) {
   return Number.isFinite(parsed) ? parsed : fallback ?? null;
 }
 
+function normalizeSlideUrls(input: FormDataEntryValue | null, primaryImageUrl: string) {
+  if (typeof input !== "string") return null;
+
+  const urls = input
+    .split("\n")
+    .map((url) => url.trim())
+    .filter(Boolean)
+    .filter((url) => url !== primaryImageUrl);
+
+  const uniqueUrls = Array.from(new Set(urls)).slice(0, 9);
+
+  return uniqueUrls.length ? uniqueUrls.join("\n") : null;
+}
+
+function normalizeSlidesJson(input: FormDataEntryValue | null) {
+  if (typeof input !== "string" || !input.trim().length) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(input) as Array<{ title?: string; imageUrl?: string; link?: string }>;
+    const normalized = parsed
+      .map((slide) => ({
+        title: String(slide?.title || "").trim(),
+        imageUrl: String(slide?.imageUrl || "").trim(),
+        link: String(slide?.link || "").trim(),
+      }))
+      .filter((slide) => slide.imageUrl.length)
+      .slice(0, 10);
+
+    return normalized.length ? JSON.stringify(normalized) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function syncTags(postId: string, tagsValue: string | null) {
   const tagNames = (tagsValue || "")
     .split(",")
@@ -351,8 +387,13 @@ export async function deleteCategoryAction(formData: FormData) {
 export async function saveBannerAction(formData: FormData) {
   await requireAdmin();
   const id = toOptionalString(formData.get("id"));
-  const title = String(formData.get("title") || "").trim();
-  const imageUrl = String(formData.get("imageUrl") || "").trim();
+  const normalizedSlidesJson = normalizeSlidesJson(formData.get("slidesJson"));
+  const parsedSlides = normalizedSlidesJson
+    ? (JSON.parse(normalizedSlidesJson) as Array<{ title: string; imageUrl: string; link?: string }>)
+    : [];
+  const firstSlide = parsedSlides[0];
+  const title = String(firstSlide?.title || formData.get("title") || "").trim();
+  const imageUrl = String(firstSlide?.imageUrl || formData.get("imageUrl") || "").trim();
 
   if (!title || !imageUrl) {
     throw new Error("Titulo e imagen son obligatorios.");
@@ -361,7 +402,9 @@ export async function saveBannerAction(formData: FormData) {
   const data = {
     title,
     imageUrl,
-    link: toOptionalString(formData.get("link")),
+    slideUrls: parsedSlides.length > 1 ? parsedSlides.slice(1).map((slide) => slide.imageUrl).join("\n") : normalizeSlideUrls(formData.get("slideUrls"), imageUrl),
+    slidesJson: normalizedSlidesJson,
+    link: toOptionalString(firstSlide?.link || formData.get("link")),
     position:
       (String(formData.get("position") || "HOME_TOP") as BannerPosition) || BannerPosition.HOME_TOP,
     isActive: toBoolean(formData.get("isActive")),

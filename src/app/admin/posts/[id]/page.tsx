@@ -22,7 +22,7 @@ export default async function EditPostPage({
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ]);
 
-  if (!post) notFound();
+  if (!post || post.deletedAt || post.status === "DELETED") notFound();
 
   return (
     <AdminShell title="Editar noticia">

@@ -67,10 +67,10 @@ export default async function Home() {
           </div>
         </section>
 
-        <BannerSlot banners={topBanners} className="grid gap-4 md:grid-cols-2" />
-
         <section className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-10">
+            <BannerSlot banners={topBanners.slice(0, 2)} className="grid gap-4 md:grid-cols-2" />
+
             <div className="space-y-8">
               {orderedCategories.map((category) => {
                 if (!category.posts.length) return null;
