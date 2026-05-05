@@ -2,9 +2,11 @@ import { notFound } from "next/navigation";
 
 import { AdminShell } from "@/components/admin/admin-shell";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
+import { PostParagraphsField } from "@/components/admin/post-paragraphs-field";
 import { savePostAction } from "@/lib/actions";
 import { POST_STATUS_OPTIONS } from "@/lib/constants";
 import { requireAdmin } from "@/lib/auth";
+import { parsePostContentBlocks } from "@/lib/post-content";
 import { prisma } from "@/lib/prisma";
 
 export default async function EditPostPage({
@@ -23,6 +25,7 @@ export default async function EditPostPage({
   ]);
 
   if (!post || post.deletedAt || post.status === "DELETED") notFound();
+  const defaultBlocks = parsePostContentBlocks(post);
 
   return (
     <AdminShell title="Editar noticia">
@@ -50,15 +53,7 @@ export default async function EditPostPage({
           <div>
             <ImageUploadField name="featuredImageUrl" defaultValue={post.featuredImageUrl} />
           </div>
-          <div className="lg:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Contenido</label>
-            <textarea
-              name="content"
-              rows={12}
-              defaultValue={post.content || ""}
-              className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3"
-            />
-          </div>
+          <PostParagraphsField name="contentBlocksJson" defaultBlocks={defaultBlocks} />
           <div>
             <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Categoria</label>
             <select

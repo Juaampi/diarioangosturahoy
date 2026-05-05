@@ -67,6 +67,7 @@ model Post {
   slug             String      @unique
   excerpt          String?
   content          String?
+  contentBlocksJson String?
   featuredImageUrl String?
   categoryId       Int?
   category         Category?   @relation(fields: [categoryId], references: [id])

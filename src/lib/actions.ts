@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { clearAdminSession, requireAdmin, setAdminSession } from "@/lib/auth";
+import { contentBlocksToPlainText, normalizePostContentBlocks } from "@/lib/post-content";
 import { prisma } from "@/lib/prisma";
 import { toSlug } from "@/lib/utils";
 
@@ -213,6 +214,14 @@ export async function savePostAction(formData: FormData) {
       })
     : null;
 
+  const normalizedContentBlocksJson = normalizePostContentBlocks(formData.get("contentBlocksJson"));
+  const parsedContentBlocks = normalizedContentBlocksJson
+    ? (JSON.parse(normalizedContentBlocksJson) as Array<{ paragraph: string; imageUrl?: string | null }>)
+    : [];
+  const normalizedContent = parsedContentBlocks.length
+    ? contentBlocksToPlainText(parsedContentBlocks)
+    : sanitizeContent(formData.get("content"));
+
   const requestedHomeOrder = toOptionalNumber(formData.get("homeOrder"));
   const homeOrder =
     requestedHomeOrder ??
@@ -223,7 +232,8 @@ export async function savePostAction(formData: FormData) {
     title,
     slug: await ensureUniquePostSlug(title, id || undefined),
     excerpt: toOptionalString(formData.get("excerpt")),
-    content: sanitizeContent(formData.get("content")),
+    content: normalizedContent,
+    contentBlocksJson: normalizedContentBlocksJson,
     featuredImageUrl: toOptionalString(formData.get("featuredImageUrl")),
     categoryId: Number(formData.get("categoryId")) || null,
     status: (String(formData.get("status") || "DRAFT") as keyof typeof PostStatus) in PostStatus

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BannerSlot } from "@/components/site/banner-slot";
 import { PostCard } from "@/components/site/post-card";
+import { parsePostContentBlocks } from "@/lib/post-content";
 import { getPublishedPostBySlug } from "@/lib/queries";
 import { absoluteUrl, formatDate, paragraphize, toOpenGraphImageUrl } from "@/lib/utils";
 
@@ -66,6 +68,7 @@ export default async function ArticlePage({
   if (!data) notFound();
 
   const { post, relatedPosts, articleBottomBanners } = data;
+  const contentBlocks = parsePostContentBlocks(post);
   const whatsappShare = `https://wa.me/?text=${encodeURIComponent(
     `${post.title} ${absoluteUrl(`/noticia/${post.slug}`)}`,
   )}`;
@@ -116,9 +119,27 @@ export default async function ArticlePage({
       <div className="grid gap-10 lg:grid-cols-[1.8fr_1fr]">
         <section className="rounded-[32px] border border-[color:var(--line)] bg-white p-8 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
           <div className="story-content max-w-none text-lg">
-            {paragraphize(post.content).map((paragraph, index) => (
-              <p key={`${post.id}-${index}`}>{paragraph}</p>
-            ))}
+            {contentBlocks.length
+              ? contentBlocks.map((block, index) => (
+                  <div key={`${post.id}-${index}`} className="space-y-6">
+                    <p>{block.paragraph}</p>
+                    {block.imageUrl ? (
+                      <div className="overflow-hidden rounded-[28px] border border-[color:var(--line)] bg-[color:var(--mist)]/20 p-3">
+                        <div className="relative h-[280px] overflow-hidden rounded-[20px] sm:h-[420px]">
+                          <Image
+                            src={block.imageUrl}
+                            alt={`${post.title} imagen ${index + 1}`}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ))
+              : paragraphize(post.content).map((paragraph, index) => (
+                  <p key={`${post.id}-${index}`}>{paragraph}</p>
+                ))}
           </div>
           {post.tags.length ? (
             <div className="mt-10 flex flex-wrap gap-2">

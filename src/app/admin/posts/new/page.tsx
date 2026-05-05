@@ -1,5 +1,6 @@
 import { AdminShell } from "@/components/admin/admin-shell";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
+import { PostParagraphsField } from "@/components/admin/post-paragraphs-field";
 import { POST_STATUS_OPTIONS } from "@/lib/constants";
 import { savePostAction } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
@@ -31,10 +32,7 @@ export default async function NewPostPage() {
           <div>
             <ImageUploadField name="featuredImageUrl" />
           </div>
-          <div className="lg:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Contenido</label>
-            <textarea name="content" rows={12} className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3" />
-          </div>
+          <PostParagraphsField name="contentBlocksJson" />
           <div>
             <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]">Categoria</label>
             <select name="categoryId" className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3">
