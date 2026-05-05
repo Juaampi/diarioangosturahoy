@@ -108,7 +108,7 @@ export default async function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
                     Ultimas noticias
                   </p>
-                  <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Panorama local y regional</h2>
+                  <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Panorama informativo general</h2>
                 </div>
                 <Link href="/categoria/locales" className="text-sm font-semibold text-[color:var(--lake-blue)]">
                   Ver Locales
