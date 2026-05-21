@@ -36,7 +36,7 @@ export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps)
 
   const content = (
     <div className="overflow-hidden rounded-[24px] border border-[color:var(--line)] bg-white shadow-[0_14px_40px_rgba(18,59,103,0.08)]">
-      <div className="relative h-40 overflow-hidden bg-white sm:h-44">
+      <div className="relative h-40 overflow-hidden bg-[color:var(--mist)]/25 sm:h-44">
         {slides.map((slide, index) => (
           <div
             key={`${slide.imageUrl}-${index}`}
@@ -44,7 +44,7 @@ export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps)
               index === normalizedActiveIndex ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
           >
-            <Image src={slide.imageUrl} alt={slide.title || banner.title} fill className="object-contain p-3" />
+            <Image src={slide.imageUrl} alt={slide.title || banner.title} fill className="object-cover" />
           </div>
         ))}
 

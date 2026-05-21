@@ -110,10 +110,11 @@ export default async function ArticlePage({
       </header>
 
       {post.featuredImageUrl ? (
-        <div
-          className="h-[420px] rounded-[32px] border border-[color:var(--line)] bg-cover bg-center shadow-[0_18px_50px_rgba(18,59,103,0.08)]"
-          style={{ backgroundImage: `url(${post.featuredImageUrl})` }}
-        />
+        <div className="overflow-hidden rounded-[32px] border border-[color:var(--line)] bg-[color:var(--mist)]/35 shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
+          <div className="relative aspect-[16/9] min-h-[260px]">
+            <Image src={post.featuredImageUrl} alt={post.title} fill className="object-contain p-4 md:p-6" priority />
+          </div>
+        </div>
       ) : null}
 
       <div className="grid gap-10 lg:grid-cols-[1.8fr_1fr]">

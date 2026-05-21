@@ -22,12 +22,12 @@ export function PostCard({ post, compact = false, externalBadge }: PostCardProps
     <article className="group h-full overflow-hidden rounded-[28px] border border-[color:var(--line)] bg-white shadow-[0_18px_50px_rgba(18,59,103,0.08)]">
       <Link href={`/noticia/${post.slug}`} className="flex h-full flex-col">
         {post.featuredImageUrl ? (
-          <div className={compact ? "relative h-44" : "relative h-56"}>
+          <div className="relative aspect-[16/10] overflow-hidden bg-[color:var(--mist)]/35">
             <Image
               src={post.featuredImageUrl}
               alt={post.title}
               fill
-              className="object-cover transition duration-500 group-hover:scale-[1.03]"
+              className="object-contain p-3 transition duration-500 group-hover:scale-[1.02]"
             />
           </div>
         ) : (

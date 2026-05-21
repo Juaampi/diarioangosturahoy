@@ -25,10 +25,16 @@ export default async function Home() {
         <section className="grid gap-6 lg:grid-cols-[2.1fr_1fr]">
           <div className="overflow-hidden rounded-[36px] border border-[color:var(--line)] bg-white shadow-[0_24px_80px_rgba(18,59,103,0.1)]">
             {mainPost ? (
-              <Link href={`/noticia/${mainPost.slug}`} className="grid h-full lg:grid-cols-[1.3fr_1fr]">
-                <div className="relative min-h-[320px]">
+              <Link href={`/noticia/${mainPost.slug}`} className="grid lg:grid-cols-[1.3fr_1fr] lg:items-center">
+                <div className="relative min-h-[320px] bg-[color:var(--mist)]/35 lg:min-h-[420px] lg:self-center">
                   {mainPost.featuredImageUrl ? (
-                    <Image src={mainPost.featuredImageUrl} alt={mainPost.title} fill className="object-cover" priority />
+                    <Image
+                      src={mainPost.featuredImageUrl}
+                      alt={mainPost.title}
+                      fill
+                      className="object-contain p-4 md:p-6"
+                      priority
+                    />
                   ) : (
                     <div className="h-full bg-[image:linear-gradient(140deg,var(--deep-lake),var(--cold-sky))]" />
                   )}
