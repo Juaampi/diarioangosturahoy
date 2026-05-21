@@ -22,17 +22,17 @@ export default async function Home() {
   return (
     <div className="editorial-shell">
       <div className="mx-auto max-w-[1600px] space-y-10 px-4 py-8 lg:px-6 2xl:px-10">
-        <section className="grid gap-6 lg:grid-cols-[2.1fr_1fr]">
+        <section className="grid gap-6 lg:grid-cols-[2.35fr_0.82fr]">
           <div className="overflow-hidden rounded-[36px] border border-[color:var(--line)] bg-white shadow-[0_24px_80px_rgba(18,59,103,0.1)]">
             {mainPost ? (
-              <Link href={`/noticia/${mainPost.slug}`} className="grid h-full lg:grid-cols-[1.15fr_0.85fr]">
-                <div className="relative min-h-[320px] bg-[color:var(--mist)]/35 lg:h-full lg:min-h-[520px]">
+              <Link href={`/noticia/${mainPost.slug}`} className="grid h-full lg:grid-cols-[1.45fr_0.95fr]">
+                <div className="relative min-h-[320px] bg-[color:var(--mist)]/20 lg:h-full lg:min-h-[520px]">
                   {mainPost.featuredImageUrl ? (
                     <Image
                       src={mainPost.featuredImageUrl}
                       alt={mainPost.title}
                       fill
-                      className="object-contain object-center"
+                      className="object-cover object-center"
                       priority
                     />
                   ) : (
@@ -68,7 +68,7 @@ export default async function Home() {
           </div>
           <div className="grid gap-6">
             {featuredPosts.slice(0, 2).map((post) => (
-              <PostCard key={post.id} post={post} compact />
+              <PostCard key={post.id} post={post} compact compactMode="tight" />
             ))}
           </div>
         </section>

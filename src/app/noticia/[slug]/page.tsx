@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ArticleShareActions } from "@/components/site/article-share-actions";
 import { BannerSlot } from "@/components/site/banner-slot";
 import { PostCard } from "@/components/site/post-card";
 import { parsePostContentBlocks } from "@/lib/post-content";
@@ -69,9 +70,7 @@ export default async function ArticlePage({
 
   const { post, relatedPosts, articleBottomBanners } = data;
   const contentBlocks = parsePostContentBlocks(post);
-  const whatsappShare = `https://wa.me/?text=${encodeURIComponent(
-    `${post.title} ${absoluteUrl(`/noticia/${post.slug}`)}`,
-  )}`;
+  const articleUrl = absoluteUrl(`/noticia/${post.slug}`);
 
   return (
     <article className="mx-auto max-w-7xl space-y-10 px-4 py-8 lg:px-6">
@@ -89,24 +88,7 @@ export default async function ArticlePage({
             {post.excerpt}
           </p>
         ) : null}
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(absoluteUrl(`/noticia/${post.slug}`))}`}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border border-[color:var(--line)] px-4 py-2 text-sm font-semibold text-[color:var(--lake-blue)]"
-          >
-            Compartir
-          </a>
-          <a
-            href={whatsappShare}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border border-[color:var(--line)] px-4 py-2 text-sm font-semibold text-[color:var(--forest-green)]"
-          >
-            WhatsApp
-          </a>
-        </div>
+        <ArticleShareActions title={post.title} url={articleUrl} />
       </header>
 
       {post.featuredImageUrl ? (
