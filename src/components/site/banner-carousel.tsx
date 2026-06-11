@@ -90,21 +90,6 @@ export function BannerCarousel({ banner, showMeta = true, variant = "default" }:
           </div>
         ))}
 
-        {slides.length > 1 ? (
-          <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full bg-white/72 px-3 py-1 shadow-sm backdrop-blur">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => goToSlide(index)}
-                aria-label={`Ir al slide ${index + 1}`}
-                className={`h-2 w-2 rounded-full transition ${
-                  index === normalizedActiveIndex ? "bg-[color:var(--lake-blue)]" : "bg-white/75"
-                }`}
-              />
-            ))}
-          </div>
-        ) : null}
       </div>
 
       {showMeta ? (
