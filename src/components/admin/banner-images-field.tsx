@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import { MAX_BANNER_SLIDES } from "@/lib/constants";
+
 type SlideItem = {
   title: string;
   imageUrl: string;
@@ -32,7 +34,7 @@ function parseSlidesJson(
           link: String(slide?.link || "").trim(),
         }))
         .filter((slide) => slide.imageUrl.length)
-        .slice(0, 10);
+        .slice(0, MAX_BANNER_SLIDES);
 
       if (normalized.length) {
         return normalized;
@@ -108,8 +110,8 @@ export function BannerImagesField({
   }
 
   function addSlide() {
-    if (slides.length >= 10) {
-      setStatus("Ya llegaste al maximo de 10 imagenes por banner.");
+    if (slides.length >= MAX_BANNER_SLIDES) {
+      setStatus(`Ya llegaste al maximo de ${MAX_BANNER_SLIDES} imagenes por banner.`);
       return;
     }
 
@@ -133,11 +135,12 @@ export function BannerImagesField({
         <div>
           <p className="text-sm font-semibold text-[color:var(--ink)]">Slides del banner</p>
           <p className="mt-1 text-xs text-[color:var(--muted-foreground)]">
-            Cada slide puede tener su propio titulo, imagen y link.
+            Cada banner puede tener hasta {MAX_BANNER_SLIDES} imagenes, y cada slide puede tener su propio titulo,
+            imagen y link.
           </p>
         </div>
         <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[color:var(--lake-blue)]">
-          {slides.length}/10 slides
+          {slides.length}/{MAX_BANNER_SLIDES} slides
         </span>
       </div>
 

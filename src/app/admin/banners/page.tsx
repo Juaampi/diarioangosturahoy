@@ -2,7 +2,7 @@ import { AdminShell } from "@/components/admin/admin-shell";
 import { BannerImagesField } from "@/components/admin/banner-images-field";
 import { BannerCarousel } from "@/components/site/banner-carousel";
 import { deleteBannerAction, saveBannerAction } from "@/lib/actions";
-import { BANNER_POSITIONS } from "@/lib/constants";
+import { BANNER_POSITIONS, MAX_BANNER_SLIDES } from "@/lib/constants";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseBannerSlides } from "@/lib/banner-slides";
@@ -15,6 +15,7 @@ type AdminBannerRecord = {
   slidesJson: string | null;
   link: string | null;
   position: string;
+  displayOrder: number;
   isActive: boolean;
   startsAt: Date | null;
   endsAt: Date | null;
@@ -25,7 +26,7 @@ type AdminBannerRecord = {
 export default async function AdminBannersPage() {
   await requireAdmin();
   const banners = (await prisma.banner.findMany({
-    orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+    orderBy: [{ position: "asc" }, { displayOrder: "asc" }, { createdAt: "desc" }],
   })) as AdminBannerRecord[];
 
   return (
@@ -38,7 +39,8 @@ export default async function AdminBannersPage() {
           <div className="space-y-2">
             <h3 className="font-serif text-3xl text-[color:var(--ink)]">Nuevo banner</h3>
             <p className="text-sm text-[color:var(--muted-foreground)]">
-              Cada banner puede funcionar como slider automatico de hasta 10 imagenes y se administra desde este mismo panel.
+              Cada banner puede funcionar como slider automatico de hasta {MAX_BANNER_SLIDES} imagenes y se administra
+              desde este mismo panel.
             </p>
           </div>
 
@@ -50,6 +52,14 @@ export default async function AdminBannersPage() {
                 </option>
               ))}
             </select>
+            <input
+              type="number"
+              name="displayOrder"
+              min="0"
+              step="1"
+              placeholder="Orden visual"
+              className="w-full rounded-2xl border border-[color:var(--line)] px-4 py-3"
+            />
             <label className="flex items-center gap-3 rounded-2xl border border-[color:var(--line)] px-4 py-3 text-sm text-[color:var(--ink)]">
               <input type="checkbox" name="isActive" defaultChecked />
               Banner activo
@@ -77,7 +87,7 @@ export default async function AdminBannersPage() {
           <div className="mb-5 space-y-2">
             <h3 className="font-serif text-3xl text-[color:var(--ink)]">Banners cargados</h3>
             <p className="text-sm text-[color:var(--muted-foreground)]">
-              Vista ordenada por posicion. Cada fila permite editar el slider, el enlace y el estado del banner.
+              Vista ordenada por posicion y prioridad. Cada fila permite editar el slider, el orden, el enlace y el estado del banner.
             </p>
           </div>
 
@@ -96,7 +106,7 @@ export default async function AdminBannersPage() {
                   <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
                     <div className="space-y-3">
                       <div className="overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white">
-                        <BannerCarousel banner={banner} />
+                        <BannerCarousel banner={banner} showMeta />
                       </div>
                       <div className="grid gap-3 rounded-2xl border border-[color:var(--line)] bg-white p-4 text-sm">
                         <div className="flex items-center justify-between gap-3">
@@ -112,8 +122,14 @@ export default async function AdminBannersPage() {
                           </span>
                         </div>
                         <div className="flex items-center justify-between gap-3">
+                          <span className="text-[color:var(--muted-foreground)]">Orden</span>
+                          <span className="font-semibold text-[color:var(--ink)]">#{banner.displayOrder}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-3">
                           <span className="text-[color:var(--muted-foreground)]">Imagenes</span>
-                          <span className="font-semibold text-[color:var(--ink)]">{slides.length}/10</span>
+                          <span className="font-semibold text-[color:var(--ink)]">
+                            {slides.length}/{MAX_BANNER_SLIDES}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -131,6 +147,14 @@ export default async function AdminBannersPage() {
                             </option>
                           ))}
                         </select>
+                        <input
+                          type="number"
+                          name="displayOrder"
+                          min="0"
+                          step="1"
+                          defaultValue={banner.displayOrder}
+                          className="w-full rounded-2xl border border-[color:var(--line)] bg-white px-4 py-3"
+                        />
                         <label className="flex items-center gap-3 rounded-2xl border border-[color:var(--line)] bg-white px-4 py-3 text-sm text-[color:var(--ink)]">
                           <input type="checkbox" name="isActive" defaultChecked={banner.isActive} />
                           Banner activo

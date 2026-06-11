@@ -12,16 +12,20 @@ type Banner = {
 export function BannerSlot({
   banners,
   className = "",
+  variant = "default",
+  showMeta = false,
 }: {
   banners: Banner[];
   className?: string;
+  variant?: "default" | "sidebar";
+  showMeta?: boolean;
 }) {
   if (!banners.length) return null;
 
   return (
     <div className={className}>
       {banners.map((banner) => {
-        return <BannerCarousel key={banner.id} banner={banner} />;
+        return <BannerCarousel key={banner.id} banner={banner} variant={variant} showMeta={showMeta} />;
       })}
     </div>
   );

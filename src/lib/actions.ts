@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { clearAdminSession, requireAdmin, setAdminSession } from "@/lib/auth";
+import { MAX_BANNER_SLIDES } from "@/lib/constants";
 import { contentBlocksToPlainText, normalizePostContentBlocks } from "@/lib/post-content";
 import { prisma } from "@/lib/prisma";
 import { toSlug } from "@/lib/utils";
@@ -99,7 +100,7 @@ function normalizeSlideUrls(input: FormDataEntryValue | null, primaryImageUrl: s
     .filter(Boolean)
     .filter((url) => url !== primaryImageUrl);
 
-  const uniqueUrls = Array.from(new Set(urls)).slice(0, 9);
+  const uniqueUrls = Array.from(new Set(urls)).slice(0, Math.max(0, MAX_BANNER_SLIDES - 1));
 
   return uniqueUrls.length ? uniqueUrls.join("\n") : null;
 }
@@ -118,7 +119,7 @@ function normalizeSlidesJson(input: FormDataEntryValue | null) {
         link: String(slide?.link || "").trim(),
       }))
       .filter((slide) => slide.imageUrl.length)
-      .slice(0, 10);
+      .slice(0, MAX_BANNER_SLIDES);
 
     return normalized.length ? JSON.stringify(normalized) : null;
   } catch {
@@ -158,6 +159,15 @@ async function getNextHomeOrder() {
   });
 
   return (aggregate._max.homeOrder ?? 0) + 1;
+}
+
+async function getNextBannerDisplayOrder(position: BannerPosition) {
+  const aggregate = await prisma.banner.aggregate({
+    _max: { displayOrder: true },
+    where: { position },
+  });
+
+  return (aggregate._max.displayOrder ?? 0) + 1;
 }
 
 export async function loginAction(formData: FormData) {
@@ -409,14 +419,33 @@ export async function saveBannerAction(formData: FormData) {
     throw new Error("Titulo e imagen son obligatorios.");
   }
 
+  const positionInput = String(formData.get("position") || BannerPosition.HOME_TOP);
+  const position = Object.values(BannerPosition).includes(positionInput as BannerPosition)
+    ? (positionInput as BannerPosition)
+    : BannerPosition.HOME_TOP;
+  const currentBanner = id
+    ? await prisma.banner.findUnique({
+        where: { id },
+        select: { displayOrder: true, position: true },
+      })
+    : null;
+  const requestedDisplayOrder = toOptionalNumber(formData.get("displayOrder"));
+  const displayOrder =
+    requestedDisplayOrder ??
+    (currentBanner
+      ? currentBanner.position === position
+        ? currentBanner.displayOrder
+        : await getNextBannerDisplayOrder(position)
+      : await getNextBannerDisplayOrder(position));
+
   const data = {
     title,
     imageUrl,
     slideUrls: parsedSlides.length > 1 ? parsedSlides.slice(1).map((slide) => slide.imageUrl).join("\n") : normalizeSlideUrls(formData.get("slideUrls"), imageUrl),
     slidesJson: normalizedSlidesJson,
     link: toOptionalString(firstSlide?.link || formData.get("link")),
-    position:
-      (String(formData.get("position") || "HOME_TOP") as BannerPosition) || BannerPosition.HOME_TOP,
+    position,
+    displayOrder,
     isActive: toBoolean(formData.get("isActive")),
     startsAt: toOptionalDate(formData.get("startsAt")),
     endsAt: toOptionalDate(formData.get("endsAt")),
@@ -430,6 +459,8 @@ export async function saveBannerAction(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/admin/banners");
+  revalidatePath("/categoria/[slug]");
+  revalidatePath("/noticia/[slug]");
   redirect("/admin/banners?saved=1");
 }
 
@@ -441,6 +472,8 @@ export async function deleteBannerAction(formData: FormData) {
   await prisma.banner.delete({ where: { id } });
   revalidatePath("/");
   revalidatePath("/admin/banners");
+  revalidatePath("/categoria/[slug]");
+  revalidatePath("/noticia/[slug]");
 }
 
 export async function saveSettingsAction(formData: FormData) {

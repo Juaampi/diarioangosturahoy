@@ -114,6 +114,7 @@ model Banner {
   slidesJson String?
   link      String?
   position  BannerPosition
+  displayOrder Int         @default(0)
   isActive  Boolean        @default(true)
   startsAt  DateTime?
   endsAt    DateTime?

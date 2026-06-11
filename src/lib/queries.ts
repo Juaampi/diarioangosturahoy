@@ -1,5 +1,11 @@
 import { BannerPosition, PostStatus } from "@prisma/client";
 
+import {
+  BANNER_PLACEHOLDER_IMAGES,
+  MIN_HOME_MIDDLE_BANNERS,
+  MIN_HOME_SIDEBAR_BANNERS,
+  MIN_HOME_TOP_BANNERS,
+} from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 
 const PUBLISHED_FILTER = {
@@ -8,6 +14,48 @@ const PUBLISHED_FILTER = {
 };
 
 const HOME_ORDER = [{ homeOrder: "desc" as const }, { publishedAt: "desc" as const }, { createdAt: "desc" as const }];
+
+type BannerLike = Awaited<ReturnType<typeof getActiveBanners>>[number];
+
+function withBannerPlaceholders(banners: BannerLike[], position: BannerPosition, minimum: number) {
+  if (banners.length >= minimum) {
+    return banners;
+  }
+
+  const placeholders = Array.from({ length: minimum - banners.length }, (_, index) => {
+    const placeholderSlides = BANNER_PLACEHOLDER_IMAGES.map((imageUrl) => ({
+      title: `Publicidad Diario Angostura ${index + 1}`,
+      imageUrl,
+      link: null,
+    }));
+
+    return {
+      id: `placeholder-${position.toLowerCase()}-${index + 1}`,
+      title: `Publicidad Diario Angostura ${index + 1}`,
+      imageUrl: placeholderSlides[0].imageUrl,
+      slideUrls: placeholderSlides
+        .slice(1)
+        .map((slide) => slide.imageUrl)
+        .join("\n"),
+      slidesJson: JSON.stringify(
+        placeholderSlides.map((slide, slideIndex) => ({
+          ...slide,
+          title: `${slide.title} - slide ${slideIndex + 1}`,
+        })),
+      ),
+      link: null,
+      position,
+      displayOrder: 1000 + index,
+      isActive: true,
+      startsAt: null,
+      endsAt: null,
+      createdAt: new Date(0),
+      updatedAt: new Date(0),
+    };
+  }) as BannerLike[];
+
+  return [...banners, ...placeholders];
+}
 
 export async function getLayoutData() {
   const [settings, embeds, categories] = await Promise.all([
@@ -64,9 +112,9 @@ export async function getHomeData() {
     featuredPosts,
     latestPosts,
     categories,
-    topBanners,
-    middleBanners,
-    sidebarBanners,
+    topBanners: withBannerPlaceholders(topBanners, BannerPosition.HOME_TOP, MIN_HOME_TOP_BANNERS),
+    middleBanners: withBannerPlaceholders(middleBanners, BannerPosition.HOME_MIDDLE, MIN_HOME_MIDDLE_BANNERS),
+    sidebarBanners: withBannerPlaceholders(sidebarBanners, BannerPosition.SIDEBAR, MIN_HOME_SIDEBAR_BANNERS),
   };
 }
 
@@ -80,7 +128,7 @@ export async function getActiveBanners(position: BannerPosition) {
       OR: [{ startsAt: null }, { startsAt: { lte: now } }],
       AND: [{ OR: [{ endsAt: null }, { endsAt: { gte: now } }] }],
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }],
   });
 }
 

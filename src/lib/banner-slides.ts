@@ -1,3 +1,5 @@
+import { MAX_BANNER_SLIDES } from "@/lib/constants";
+
 export type BannerSlide = {
   title: string;
   imageUrl: string;
@@ -29,7 +31,7 @@ export function parseBannerSlides(banner: BannerLike): BannerSlide[] {
           link: typeof slide?.link === "string" ? slide.link.trim() : null,
         }))
         .filter((slide) => slide.imageUrl.length)
-        .slice(0, 10);
+        .slice(0, MAX_BANNER_SLIDES);
 
       if (normalized.length) {
         return normalized;
@@ -47,5 +49,5 @@ export function parseBannerSlides(banner: BannerLike): BannerSlide[] {
       link: banner.link || null,
     }));
 
-  return [baseSlide, ...extraSlides].slice(0, 10);
+  return [baseSlide, ...extraSlides].slice(0, MAX_BANNER_SLIDES);
 }

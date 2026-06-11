@@ -1,0 +1,2 @@
+ALTER TABLE "public"."Banner"
+ADD COLUMN "displayOrder" INTEGER NOT NULL DEFAULT 0;

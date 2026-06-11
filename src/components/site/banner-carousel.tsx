@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { parseBannerSlides } from "@/lib/banner-slides";
 
@@ -14,13 +14,22 @@ type BannerCarouselProps = {
     link?: string | null;
   };
   showMeta?: boolean;
+  variant?: "default" | "sidebar";
 };
 
-export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps) {
+export function BannerCarousel({ banner, showMeta = true, variant = "default" }: BannerCarouselProps) {
   const slides = useMemo(() => parseBannerSlides(banner), [banner]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
   const normalizedActiveIndex = slides.length ? activeIndex % slides.length : 0;
   const currentSlide = slides[normalizedActiveIndex];
+  const imageHeightClass = variant === "sidebar" ? "h-44 sm:h-48 xl:h-56" : "h-40 sm:h-44";
+  const metaPaddingClass = variant === "sidebar" ? "p-5" : "p-4";
+
+  function goToSlide(nextIndex: number) {
+    if (!slides.length) return;
+    setActiveIndex((nextIndex + slides.length) % slides.length);
+  }
 
   useEffect(() => {
     if (slides.length <= 1) {
@@ -34,9 +43,37 @@ export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps)
     return () => window.clearInterval(timer);
   }, [slides.length]);
 
+  function onTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  }
+
+  function onTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+    if (touchStartX.current === null || slides.length <= 1) {
+      touchStartX.current = null;
+      return;
+    }
+
+    const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX.current;
+    const deltaX = touchEndX - touchStartX.current;
+
+    if (Math.abs(deltaX) > 40) {
+      if (deltaX > 0) {
+        goToSlide(normalizedActiveIndex - 1);
+      } else {
+        goToSlide(normalizedActiveIndex + 1);
+      }
+    }
+
+    touchStartX.current = null;
+  }
+
   const content = (
-    <div className="overflow-hidden rounded-[24px] border border-[color:var(--line)] bg-white shadow-[0_14px_40px_rgba(18,59,103,0.08)]">
-      <div className="relative h-40 overflow-hidden bg-[color:var(--mist)]/25 sm:h-44">
+    <div
+      className="overflow-hidden rounded-[24px] border border-[color:var(--line)] bg-white shadow-[0_14px_40px_rgba(18,59,103,0.08)]"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <div className={`relative overflow-hidden bg-[color:var(--mist)]/25 ${imageHeightClass}`}>
         {slides.map((slide, index) => (
           <div
             key={`${slide.imageUrl}-${index}`}
@@ -44,17 +81,25 @@ export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps)
               index === normalizedActiveIndex ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
           >
-            <Image src={slide.imageUrl} alt={slide.title || banner.title} fill className="object-cover" />
+            <Image
+              src={slide.imageUrl}
+              alt={slide.title || banner.title}
+              fill
+              className={`object-cover ${index === normalizedActiveIndex ? "banner-zoom-out" : ""}`}
+            />
           </div>
         ))}
 
         {slides.length > 1 ? (
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2 rounded-full bg-white/80 px-3 py-1 shadow-sm backdrop-blur">
+          <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full bg-white/72 px-3 py-1 shadow-sm backdrop-blur">
             {slides.map((_, index) => (
-              <span
+              <button
                 key={index}
-                className={`h-2.5 w-2.5 rounded-full ${
-                  index === normalizedActiveIndex ? "bg-[color:var(--lake-blue)]" : "bg-[color:var(--line)]"
+                type="button"
+                onClick={() => goToSlide(index)}
+                aria-label={`Ir al slide ${index + 1}`}
+                className={`h-2 w-2 rounded-full transition ${
+                  index === normalizedActiveIndex ? "bg-[color:var(--lake-blue)]" : "bg-white/75"
                 }`}
               />
             ))}
@@ -63,7 +108,7 @@ export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps)
       </div>
 
       {showMeta ? (
-        <div className="p-4">
+        <div className={metaPaddingClass}>
           <p className="text-sm font-semibold text-[color:var(--ink)]">
             {currentSlide?.title || banner.title}
           </p>
@@ -75,11 +120,18 @@ export function BannerCarousel({ banner, showMeta = true }: BannerCarouselProps)
     </div>
   );
 
-  return currentSlide?.link ? (
-    <a href={currentSlide.link} target="_blank" rel="noreferrer" className="block">
+  return (
+    <div className="relative">
+      {currentSlide?.link ? (
+        <a
+          href={currentSlide.link}
+          target="_blank"
+          rel="noreferrer"
+          className="absolute inset-0 z-10 block"
+          aria-label={currentSlide.title || banner.title}
+        />
+      ) : null}
       {content}
-    </a>
-  ) : (
-    content
+    </div>
   );
 }

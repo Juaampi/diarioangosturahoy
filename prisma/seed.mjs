@@ -325,66 +325,34 @@ async function main() {
     }
   }
 
-  const sampleBanners = [
-    {
-      title: "Turismo y experiencias de montana",
-      imageUrl:
-        "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
-      position: "HOME_TOP",
-      isActive: true,
-    },
-    {
-      title: "Sabores patagonicos y gastronomia local",
-      imageUrl:
-        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80",
-      position: "HOME_MIDDLE",
-      isActive: true,
-    },
-    {
-      title: "Escapadas y hospedajes de montana",
-      imageUrl:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-      position: "HOME_MIDDLE",
-      isActive: true,
-    },
-    {
-      title: "Agenda cultural de la semana",
-      imageUrl:
-        "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80",
-      position: "SIDEBAR",
-      isActive: true,
-    },
-    {
-      title: "Comercios y servicios recomendados",
-      imageUrl:
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",
-      position: "SIDEBAR",
-      isActive: true,
-    },
-    {
-      title: "Moda outdoor y equipamiento",
-      imageUrl:
-        "https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1200&q=80",
-      position: "SIDEBAR",
-      isActive: true,
-    },
-    {
-      title: "Cabanas y refugios de montana",
-      imageUrl:
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
-      position: "SIDEBAR",
-      isActive: true,
-    },
+  const sidebarPlaceholderSlides = [
+    "/placeholders/publicidad-diario-angostura.svg",
+    "/placeholders/publicidad-diario-angostura-2.svg",
+    "/placeholders/publicidad-diario-angostura-3.svg",
   ];
 
-  for (const banner of sampleBanners) {
+  const sidebarPlaceholderBanners = Array.from({ length: 7 }, (_, index) => ({
+    id: `sidebar-diario-angostura-publicidad-${index + 1}`,
+    title: `Diario Angostura Publicidad ${index + 1}`,
+    imageUrl: sidebarPlaceholderSlides[0],
+    slideUrls: sidebarPlaceholderSlides.slice(1).join("\n"),
+    slidesJson: JSON.stringify(
+      sidebarPlaceholderSlides.map((imageUrl, slideIndex) => ({
+        title: `Diario Angostura Publicidad ${index + 1} - slide ${slideIndex + 1}`,
+        imageUrl,
+        link: null,
+      })),
+    ),
+    position: "SIDEBAR",
+    displayOrder: 17 + index,
+    isActive: true,
+  }));
+
+  for (const banner of sidebarPlaceholderBanners) {
     await prisma.banner.upsert({
-      where: { id: slugify(`${banner.position}-${banner.title}`) },
+      where: { id: banner.id },
       update: banner,
-      create: {
-        id: slugify(`${banner.position}-${banner.title}`),
-        ...banner,
-      },
+      create: banner,
     });
   }
 }

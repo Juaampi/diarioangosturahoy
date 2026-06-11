@@ -100,3 +100,18 @@ a {
   padding-left: 1rem;
   color: var(--muted-foreground);
 }
+
+.banner-zoom-out {
+  animation: bannerZoomOut 3s ease-out both;
+  will-change: transform;
+}
+
+@keyframes bannerZoomOut {
+  from {
+    transform: scale(1.12);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}

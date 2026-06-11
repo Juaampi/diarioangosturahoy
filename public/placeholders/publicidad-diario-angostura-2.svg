@@ -1,0 +1,19 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" rx="36" fill="#EDF6EE"/>
+  <rect width="1200" height="720" rx="36" fill="url(#paint0_linear)"/>
+  <circle cx="994" cy="130" r="172" fill="#2B6B47" fill-opacity="0.18"/>
+  <circle cx="200" cy="610" r="238" fill="#72B7DF" fill-opacity="0.16"/>
+  <path d="M0 548C172 472 298 508 428 546C594 595 780 610 944 533C1038 489 1110 426 1200 406V720H0V548Z" fill="#2B6B47" fill-opacity="0.16"/>
+  <rect x="73" y="75" width="1054" height="570" rx="30" fill="white" fill-opacity="0.72" stroke="#BFD7E4" stroke-width="2"/>
+  <text x="110" y="238" fill="#2B6B47" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700" letter-spacing="0.16em">PUBLICIDAD</text>
+  <text x="110" y="312" fill="#11283F" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">DIARIO</text>
+  <text x="110" y="394" fill="#11283F" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">ANGOSTURA</text>
+  <text x="110" y="468" fill="#526D82" font-family="Arial, Helvetica, sans-serif" font-size="32" letter-spacing="0.22em">PUBLICIDAD DISPONIBLE</text>
+  <text x="110" y="542" fill="#526D82" font-family="Arial, Helvetica, sans-serif" font-size="26">Espacio temporal hasta cargar la pieza final</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="141" y1="71" x2="1054" y2="663" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E3F2E7"/>
+    </linearGradient>
+  </defs>
+</svg>

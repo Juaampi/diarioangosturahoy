@@ -9,8 +9,7 @@ import { formatDate } from "@/lib/utils";
 
 export default async function Home() {
   const [{ embeds, settings }, homeData] = await Promise.all([getLayoutData(), getHomeData()]);
-  const { mainPost, featuredPosts, latestPosts, categories, topBanners, middleBanners, sidebarBanners } =
-    homeData;
+  const { mainPost, featuredPosts, categories, topBanners, middleBanners, sidebarBanners } = homeData;
   const orderedSectionSlugs = ["locales", "regionales", "nacionales", "internacionales", "deporte"];
   const orderedCategories = [...categories].sort((left, right) => {
     const leftIndex = orderedSectionSlugs.indexOf(left.slug);
@@ -108,24 +107,20 @@ export default async function Home() {
               })}
             </div>
 
-            <div>
-              <div className="mb-5 flex items-end justify-between gap-4">
+            {middleBanners.length ? (
+              <section className="space-y-5">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
-                    Ultimas noticias
+                    Publicidad
                   </p>
-                  <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Panorama informativo general</h2>
+                  <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Espacios publicitarios</h2>
                 </div>
-                <Link href="/categoria/locales" className="text-sm font-semibold text-[color:var(--lake-blue)]">
-                  Ver Locales
-                </Link>
-              </div>
-              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {latestPosts.slice(0, 6).map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </div>
+                <BannerSlot
+                  banners={middleBanners}
+                  className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]"
+                />
+              </section>
+            ) : null}
 
             <div className="rounded-[32px] border border-[color:var(--line)] bg-[linear-gradient(135deg,rgba(15,77,134,0.92),rgba(43,107,71,0.85))] p-8 text-white shadow-[0_20px_60px_rgba(15,77,134,0.2)]">
               <div className="space-y-6">
@@ -140,21 +135,14 @@ export default async function Home() {
               </div>
             </div>
 
-            {featuredPosts.slice(2, 6).length ? (
-              <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-                {featuredPosts.slice(2, 6).map((post) => (
-                  <PostCard key={post.id} post={post} compact />
-                ))}
-              </section>
-            ) : null}
-
-            <BannerSlot banners={middleBanners.slice(0, 2)} className="grid gap-4 md:grid-cols-2" />
           </div>
 
           <aside className="space-y-5">
-            <div className="xl:sticky xl:top-[220px] xl:space-y-5">
-              <BannerSlot banners={sidebarBanners} className="space-y-4" />
-            </div>
+            <BannerSlot
+              banners={sidebarBanners}
+              variant="sidebar"
+              className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1"
+            />
           </aside>
         </section>
       </div>

@@ -1,0 +1,19 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" rx="36" fill="#EFF5FA"/>
+  <rect width="1200" height="720" rx="36" fill="url(#paint0_linear)"/>
+  <circle cx="1030" cy="138" r="180" fill="#0F4D86" fill-opacity="0.18"/>
+  <circle cx="182" cy="604" r="232" fill="#E2B46D" fill-opacity="0.18"/>
+  <path d="M0 528C148 470 276 450 412 488C557 529 696 607 862 589C1001 574 1103 478 1200 430V720H0V528Z" fill="#0F4D86" fill-opacity="0.16"/>
+  <rect x="73" y="75" width="1054" height="570" rx="30" fill="white" fill-opacity="0.74" stroke="#BFD7E4" stroke-width="2"/>
+  <text x="110" y="238" fill="#0F4D86" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700" letter-spacing="0.16em">PUBLICIDAD</text>
+  <text x="110" y="312" fill="#11283F" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">DIARIO</text>
+  <text x="110" y="394" fill="#11283F" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">ANGOSTURA</text>
+  <text x="110" y="468" fill="#526D82" font-family="Arial, Helvetica, sans-serif" font-size="32" letter-spacing="0.22em">SUMA TU MARCA AQUI</text>
+  <text x="110" y="542" fill="#526D82" font-family="Arial, Helvetica, sans-serif" font-size="26">Placeholder automatico para mantener la grilla completa</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="109" y1="57" x2="1092" y2="680" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#DFEEF8"/>
+    </linearGradient>
+  </defs>
+</svg>

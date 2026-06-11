@@ -14,6 +14,15 @@ export const DEFAULT_RADIO_IMAGE =
   "https://escuchanosonline.com/clientes/img/logos/d1b3917b71d08439acca2d9084c8241b.jpg";
 export const DEFAULT_RADIO_STREAM_URL =
   "https://streaming.escuchanosonline.com:7109/stream";
+export const MAX_BANNER_SLIDES = 3;
+export const BANNER_PLACEHOLDER_IMAGES = [
+  "/placeholders/publicidad-diario-angostura.svg",
+  "/placeholders/publicidad-diario-angostura-2.svg",
+  "/placeholders/publicidad-diario-angostura-3.svg",
+] as const;
+export const MIN_HOME_TOP_BANNERS = 2;
+export const MIN_HOME_MIDDLE_BANNERS = 4;
+export const MIN_HOME_SIDEBAR_BANNERS = 16;
 
 export const CATEGORY_SEED = [
   { name: "Locales", slug: "locales" },
@@ -32,7 +41,7 @@ export const POST_STATUS_OPTIONS = [
 
 export const BANNER_POSITIONS = [
   { value: "HOME_TOP", label: "Home superior" },
-  { value: "HOME_MIDDLE", label: "Home medio" },
+  { value: "HOME_MIDDLE", label: "Home grilla central" },
   { value: "SIDEBAR", label: "Sidebar" },
   { value: "ARTICLE_BOTTOM", label: "Debajo del articulo" },
   { value: "CATEGORY_TOP", label: "Encabezado de categoria" },
