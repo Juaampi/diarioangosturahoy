@@ -6,6 +6,7 @@ import { BANNER_POSITIONS, MAX_BANNER_SLIDES } from "@/lib/constants";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseBannerSlides } from "@/lib/banner-slides";
+import { cn } from "@/lib/utils";
 
 type AdminBannerRecord = {
   id: string;
@@ -22,6 +23,8 @@ type AdminBannerRecord = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+const BANNER_POSITION_LABELS = Object.fromEntries(BANNER_POSITIONS.map((position) => [position.value, position.label]));
 
 export default async function AdminBannersPage() {
   await requireAdmin();
@@ -94,6 +97,8 @@ export default async function AdminBannersPage() {
           <div className="space-y-5">
             {banners.map((banner) => {
               const slides = parseBannerSlides(banner);
+              const positionLabel = BANNER_POSITION_LABELS[banner.position] || banner.position;
+              const isBetweenSections = banner.position === "HOME_BETWEEN_SECTIONS";
 
               return (
                 <form
@@ -111,8 +116,15 @@ export default async function AdminBannersPage() {
                       <div className="grid gap-3 rounded-2xl border border-[color:var(--line)] bg-white p-4 text-sm">
                         <div className="flex items-center justify-between gap-3">
                           <span className="text-[color:var(--muted-foreground)]">Posicion</span>
-                          <span className="rounded-full bg-[color:var(--mist)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--lake-blue)]">
-                            {banner.position}
+                          <span
+                            className={cn(
+                              "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em]",
+                              isBetweenSections
+                                ? "bg-[#e9f7ee] text-[#1f7a46]"
+                                : "bg-[color:var(--mist)] text-[color:var(--lake-blue)]",
+                            )}
+                          >
+                            {positionLabel}
                           </span>
                         </div>
                         <div className="flex items-center justify-between gap-3">

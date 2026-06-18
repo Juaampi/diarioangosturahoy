@@ -2,6 +2,7 @@ import { BannerPosition, PostStatus } from "@prisma/client";
 
 import {
   BANNER_PLACEHOLDER_IMAGES,
+  MIN_HOME_BETWEEN_SECTION_BANNERS,
   MIN_HOME_MIDDLE_BANNERS,
   MIN_HOME_SIDEBAR_BANNERS,
   MIN_HOME_TOP_BANNERS,
@@ -72,7 +73,7 @@ export async function getLayoutData() {
 }
 
 export async function getHomeData() {
-  const [mainPost, featuredPosts, latestPosts, categories, topBanners, middleBanners, sidebarBanners] =
+  const [mainPost, featuredPosts, latestPosts, categories, topBanners, betweenSectionBanners, middleBanners, sidebarBanners] =
     await Promise.all([
       prisma.post.findFirst({
         where: { ...PUBLISHED_FILTER, isMain: true },
@@ -103,6 +104,7 @@ export async function getHomeData() {
         },
       }),
       getActiveBanners(BannerPosition.HOME_TOP),
+      getActiveBanners(BannerPosition.HOME_BETWEEN_SECTIONS),
       getActiveBanners(BannerPosition.HOME_MIDDLE),
       getActiveBanners(BannerPosition.SIDEBAR),
     ]);
@@ -113,6 +115,11 @@ export async function getHomeData() {
     latestPosts,
     categories,
     topBanners: withBannerPlaceholders(topBanners, BannerPosition.HOME_TOP, MIN_HOME_TOP_BANNERS),
+    betweenSectionBanners: withBannerPlaceholders(
+      betweenSectionBanners,
+      BannerPosition.HOME_BETWEEN_SECTIONS,
+      MIN_HOME_BETWEEN_SECTION_BANNERS,
+    ),
     middleBanners: withBannerPlaceholders(middleBanners, BannerPosition.HOME_MIDDLE, MIN_HOME_MIDDLE_BANNERS),
     sidebarBanners: withBannerPlaceholders(sidebarBanners, BannerPosition.SIDEBAR, MIN_HOME_SIDEBAR_BANNERS),
   };

@@ -23,6 +23,7 @@ enum SourceType {
 
 enum BannerPosition {
   HOME_TOP
+  HOME_BETWEEN_SECTIONS
   HOME_MIDDLE
   SIDEBAR
   ARTICLE_BOTTOM

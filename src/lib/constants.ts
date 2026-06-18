@@ -21,6 +21,7 @@ export const BANNER_PLACEHOLDER_IMAGES = [
   "/placeholders/publicidad-diario-angostura-3.svg",
 ] as const;
 export const MIN_HOME_TOP_BANNERS = 2;
+export const MIN_HOME_BETWEEN_SECTION_BANNERS = 2;
 export const MIN_HOME_MIDDLE_BANNERS = 4;
 export const MIN_HOME_SIDEBAR_BANNERS = 16;
 
@@ -41,6 +42,7 @@ export const POST_STATUS_OPTIONS = [
 
 export const BANNER_POSITIONS = [
   { value: "HOME_TOP", label: "Home superior" },
+  { value: "HOME_BETWEEN_SECTIONS", label: "Home entre Locales y Regionales" },
   { value: "HOME_MIDDLE", label: "Home grilla central" },
   { value: "SIDEBAR", label: "Sidebar" },
   { value: "ARTICLE_BOTTOM", label: "Debajo del articulo" },

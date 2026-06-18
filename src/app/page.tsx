@@ -9,7 +9,8 @@ import { formatDate } from "@/lib/utils";
 
 export default async function Home() {
   const [{ embeds, settings }, homeData] = await Promise.all([getLayoutData(), getHomeData()]);
-  const { mainPost, featuredPosts, categories, topBanners, middleBanners, sidebarBanners } = homeData;
+  const { mainPost, featuredPosts, categories, topBanners, betweenSectionBanners, middleBanners, sidebarBanners } =
+    homeData;
   const orderedSectionSlugs = ["locales", "regionales", "nacionales", "internacionales", "deporte"];
   const orderedCategories = [...categories].sort((left, right) => {
     const leftIndex = orderedSectionSlugs.indexOf(left.slug);
@@ -118,6 +119,12 @@ export default async function Home() {
                         ))}
                       </div>
                     </section>
+                    {category.slug === "locales" ? (
+                      <BannerSlot
+                        banners={betweenSectionBanners.slice(0, 2)}
+                        className="grid gap-4 md:grid-cols-2"
+                      />
+                    ) : null}
                     {category.slug === "regionales" ? advertisingSection : null}
                   </div>
                 );
