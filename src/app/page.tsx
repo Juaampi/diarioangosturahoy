@@ -17,6 +17,20 @@ export default async function Home() {
 
     return (leftIndex === -1 ? 999 : leftIndex) - (rightIndex === -1 ? 999 : rightIndex);
   });
+  const advertisingSection = middleBanners.length ? (
+    <section className="space-y-5">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
+          Publicidad
+        </p>
+        <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Espacios publicitarios</h2>
+      </div>
+      <BannerSlot
+        banners={middleBanners}
+        className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]"
+      />
+    </section>
+  ) : null;
 
   return (
     <div className="editorial-shell">
@@ -82,45 +96,33 @@ export default async function Home() {
                 const postsToRender = category.slug === "locales" ? category.posts.slice(0, 6) : category.posts.slice(0, 3);
 
                 return (
-                  <section key={category.id} className="space-y-5">
-                    <div className="flex items-end justify-between gap-4">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
-                          Seccion
-                        </p>
-                        <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">{category.name}</h3>
+                  <div key={category.id} className="space-y-8">
+                    <section className="space-y-5">
+                      <div className="flex items-end justify-between gap-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
+                            Seccion
+                          </p>
+                          <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">{category.name}</h3>
+                        </div>
+                        <Link
+                          href={`/categoria/${category.slug}`}
+                          className="text-sm font-semibold text-[color:var(--lake-blue)]"
+                        >
+                          Ver mas
+                        </Link>
                       </div>
-                      <Link
-                        href={`/categoria/${category.slug}`}
-                        className="text-sm font-semibold text-[color:var(--lake-blue)]"
-                      >
-                        Ver mas
-                      </Link>
-                    </div>
-                    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                      {postsToRender.map((post) => (
-                        <PostCard key={post.id} post={post} compact />
-                      ))}
-                    </div>
-                  </section>
+                      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                        {postsToRender.map((post) => (
+                          <PostCard key={post.id} post={post} compact />
+                        ))}
+                      </div>
+                    </section>
+                    {category.slug === "regionales" ? advertisingSection : null}
+                  </div>
                 );
               })}
             </div>
-
-            {middleBanners.length ? (
-              <section className="space-y-5">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--forest-green)]">
-                    Publicidad
-                  </p>
-                  <h2 className="mt-2 font-serif text-4xl text-[color:var(--ink)]">Espacios publicitarios</h2>
-                </div>
-                <BannerSlot
-                  banners={middleBanners}
-                  className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]"
-                />
-              </section>
-            ) : null}
 
             <div className="rounded-[32px] border border-[color:var(--line)] bg-[linear-gradient(135deg,rgba(15,77,134,0.92),rgba(43,107,71,0.85))] p-8 text-white shadow-[0_20px_60px_rgba(15,77,134,0.2)]">
               <div className="space-y-6">

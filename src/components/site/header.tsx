@@ -14,6 +14,7 @@ import {
   DEFAULT_RADIO_IMAGE,
   DEFAULT_RADIO_URL,
   DEFAULT_RADIO_STREAM_URL,
+  DEFAULT_WHATSAPP_NUMBER,
   DEFAULT_YOUTUBE_URL,
 } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -25,9 +26,10 @@ type HeaderProps = {
   radioUrl?: string | null;
   youtubeUrl?: string | null;
   radioStreamUrl?: string | null;
+  whatsappNumber?: string | null;
 };
 
-export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStreamUrl }: HeaderProps) {
+export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStreamUrl, whatsappNumber }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
 
@@ -60,6 +62,8 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
     href: `/categoria/${category.slug}`,
     label: category.slug === "deporte" ? "Deportes" : category.name,
   }));
+  const whatsappPhone = (whatsappNumber || DEFAULT_WHATSAPP_NUMBER).replace(/\D/g, "");
+  const whatsappHref = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent("Hola, quiero dejar una denuncia en Diario Angostura Hoy.")}`;
   const socialLinks = [
     {
       href: DEFAULT_HEADER_FACEBOOK_URL,
@@ -252,6 +256,18 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
                 {item.label}
               </Link>
             ))}
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
+              className={cn(
+                "rounded-full font-semibold uppercase tracking-[0.24em] transition-all duration-300",
+                isCompact ? "px-4 py-2.5 text-[13px]" : "px-5 py-3 text-sm",
+                "bg-[#1fa855] text-white shadow-[0_10px_30px_rgba(31,168,85,0.25)] hover:-translate-y-0.5",
+              )}
+            >
+              Deja tu denuncia aca
+            </a>
           </nav>
         </div>
 
@@ -290,6 +306,15 @@ export function Header({ categories, siteName, radioUrl, youtubeUrl, radioStream
                   {item.label}
                 </Link>
               ))}
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setIsOpen(false)}
+                className="rounded-2xl bg-[#1fa855] px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white"
+              >
+                Deja tu denuncia aca
+              </a>
             </nav>
           </div>
         ) : null}
