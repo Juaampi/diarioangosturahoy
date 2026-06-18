@@ -108,10 +108,10 @@ a {
 
 @keyframes bannerZoomOut {
   from {
-    transform: scale(1.12);
+    transform: scale(1.02);
   }
 
   to {
-    transform: scale(1);
+    transform: scale(0.98);
   }
 }
