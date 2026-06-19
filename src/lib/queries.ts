@@ -19,11 +19,13 @@ const HOME_ORDER = [{ homeOrder: "desc" as const }, { publishedAt: "desc" as con
 type BannerLike = Awaited<ReturnType<typeof getActiveBanners>>[number];
 
 function withBannerPlaceholders(banners: BannerLike[], position: BannerPosition, minimum: number) {
-  if (banners.length >= minimum) {
+  // Show placeholders only when a slot has no real banners yet, so we avoid
+  // mixing production ads with fallback creatives in the same block.
+  if (banners.length > 0) {
     return banners;
   }
 
-  const placeholders = Array.from({ length: minimum - banners.length }, (_, index) => {
+  const placeholders = Array.from({ length: minimum }, (_, index) => {
     const placeholderSlides = BANNER_PLACEHOLDER_IMAGES.map((imageUrl) => ({
       title: `Publicidad Diario Angostura ${index + 1}`,
       imageUrl,
